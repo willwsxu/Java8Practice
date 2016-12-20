@@ -18,6 +18,8 @@ public class Java8Practice {
         // TODO code application logic here
         new Java8IO().testPathWalk("c:\\users\\Andy\\OneDrive");
         new Java8IO().readMapfile("test.txt");
+        new Java8Lamda().sortPerson();
+        new Java8Lamda().testMap();
     }
     
 }

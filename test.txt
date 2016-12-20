@@ -1,0 +1,4 @@
+;Comment line
+;atom weight
+C=12
+O=16

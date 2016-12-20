@@ -13,6 +13,5 @@ hs_err_pid*
 /build/
 build.xml
 /nbproject/private/
-test.txt
 nbproject/build-impl.xml
 manifest.mf
