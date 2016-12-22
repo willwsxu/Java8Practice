@@ -5,6 +5,8 @@
  */
 package java8practice;
 
+import java.io.IOException;
+
 /**
  *
  * @author Andy
@@ -20,6 +22,14 @@ public class Java8Practice {
         new Java8IO().readMapfile("test.txt");
         new Java8Lamda().sortPerson();
         new Java8Lamda().testMap();
+        new Java8Lamda().testStreamMapReduce();
+        try {
+        new Java8IO().splitFile("TomSawyer.txt", 4);
+        }
+        catch (IOException e)
+        {
+        }
+        new Java8Lamda().testFlatMapper();
     }
     
 }

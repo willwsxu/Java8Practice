@@ -5,12 +5,23 @@
  */
 package java8practice;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
+import java.util.regex.Pattern;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  *
@@ -99,4 +110,51 @@ public class Java8Lamda {
         (c, p)->System.out.println(c+" : "+p));
     }
     
+    public void testStreamMapReduce()
+    {
+        ArrayList<Person> people = new ArrayList<>();
+        people.add(new Person("Andy", "Xu", 18));
+        people.add(new Person("Annie", "Xu", 15));
+        // map will change to stream of int in following example
+        people.stream().map(p->p.getAge()).filter(age->age>15).forEach(System.out::println);
+        // intermediate calls return a stream, no actual work is done
+        // terminal calls return other types, or void
+        // skip () skip from beginning of the stream
+        // limit() keep # item from beginning, discard the rest
+        boolean b = people.stream().allMatch(p->p.getAge()>15); // false;
+        Optional<Person> opt = people.stream().filter(p->p.getAge()>20).findFirst();
+        Random rand = new Random();
+        Stream<Integer> stream = Stream.generate(()->rand.nextInt());
+        stream.limit(3).forEach(System.out::println);
+        
+        stream = Stream.iterate(1, a->a*2);
+        stream.limit(5).forEach(System.out::println);
+        
+        IntStream istream = ThreadLocalRandom.current().ints();
+        istream.limit(3).forEach(System.out::println);
+    }
+    
+    public void testFlatMapper()
+    {
+        //http://introcs.cs.princeton.edu/java/home/
+        //http://introcs.cs.princeton.edu/java/data/
+        //http://onlinebooks.library.upenn.edu/webbin/gutbook/lookup?num=74
+        try {
+            Stream<String> s1 = Files.lines(Paths.get("TomSawyer-1.txt"));
+            Stream<String> s2 = Files.lines(Paths.get("TomSawyer-2.txt"));
+            Stream<String> s3 = Files.lines(Paths.get("TomSawyer-3.txt"));
+            Stream<String> s4 = Files.lines(Paths.get("TomSawyer-4.txt"));
+            Function<String, Stream<String>> lineSplitter = line->Pattern.compile(" ").splitAsStream(line);
+            Function<String, Stream<String>> lineSplitter2 = line->Pattern.compile("-").splitAsStream(line);
+            Stream<String> lineStream = Stream.of(s1, s2, s3, s4).flatMap(Function.identity());
+            // REGEX ^[\\[\"'-(]+
+            //[\\]\"'-(),_:;!.?]+$
+            Stream<String> wordStream = lineStream.flatMap(lineSplitter).flatMap(lineSplitter2).map(word->word.toUpperCase().replaceAll("^\\W+", "").replaceAll("\\W+$", "")).distinct().sorted().peek(System.out::println);
+            System.out.println("word count :"+wordStream.count());
+        }
+        catch (IOException e)
+        {
+            
+        }
+    }
 }
