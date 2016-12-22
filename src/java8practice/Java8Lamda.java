@@ -117,6 +117,9 @@ public class Java8Lamda {
         people.add(new Person("Annie", "Xu", 15));
         // map will change to stream of int in following example
         people.stream().map(p->p.getAge()).filter(age->age>15).forEach(System.out::println);
+        // use intStream to aboid bosing/unboxing performance losss
+        IntStream istream =people.stream().mapToInt(p->p.getAge());
+        System.out.println("average age: "+istream.average()); // return optional double
         // intermediate calls return a stream, no actual work is done
         // terminal calls return other types, or void
         // skip () skip from beginning of the stream
@@ -130,7 +133,7 @@ public class Java8Lamda {
         stream = Stream.iterate(1, a->a*2);
         stream.limit(5).forEach(System.out::println);
         
-        IntStream istream = ThreadLocalRandom.current().ints();
+        istream = ThreadLocalRandom.current().ints();
         istream.limit(3).forEach(System.out::println);
     }
     
