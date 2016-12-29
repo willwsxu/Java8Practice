@@ -7,19 +7,22 @@ package java8practice;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
+import java.util.function.ToIntFunction;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -152,12 +155,43 @@ public class Java8Lamda {
             Stream<String> lineStream = Stream.of(s1, s2, s3, s4).flatMap(Function.identity());
             // REGEX ^[\\[\"'-(]+
             //[\\]\"'-(),_:;!.?]+$
-            Stream<String> wordStream = lineStream.flatMap(lineSplitter).flatMap(lineSplitter2).map(word->word.toUpperCase().replaceAll("^\\W+", "").replaceAll("\\W+$", "")).distinct().sorted().peek(System.out::println);
-            System.out.println("word count :"+wordStream.count());
+            Stream<String> wordStream = lineStream.flatMap(lineSplitter).flatMap(lineSplitter2)
+                    .map(word->word.toUpperCase().replaceAll("^\\W+", "").replaceAll("\\W+$", ""));//.distinct().sorted().peek(System.out::println);
+            //System.out.println("Total word count :"+wordStream.count());
+            // count of word used
+            Map<String, Integer> wordMap = wordStream.collect(Collectors.toMap(k->k, v->1, (v1,v2)->v1+v2));
+            System.out.println("map word count :"+wordMap.size());
+            // print sorted map by value
+            wordMap.entrySet().stream()
+                    .sorted(Map.Entry.comparingByValue((v1,v2)->v2.compareTo(v1)))  // sort from large to small
+                    .forEach(entry->System.out.println(entry.getKey()+" count "+entry.getValue()));
         }
         catch (IOException e)
         {
             
         }
+    }
+    public void scrabbleScore() throws IOException
+    {
+        // official scrable words
+        Set<String> scrabbleWords = Files.lines(Paths.get("ospd.txt"))
+                .map(word->word.toLowerCase()).collect(Collectors.toSet());
+        Set<String> shakespearWords = Files.lines(Paths.get("words.shakespeare.txt"))
+                .map(word->word.toLowerCase()).collect(Collectors.toSet());
+        // letter A-Z scrabble value
+        final int[] scrabbleENScore={1,3,3,2,1,4,2,4,1,8,5,1,3,1,3,3,10,1,1,1,1,4,4,8,4,10};
+        Function<String,Integer> score = word->word.chars().map(letter->scrabbleENScore[letter-'a']).sum();
+        // use int to avoid auto boxing as chars() is IntStream
+        ToIntFunction<String> intScore = word->word.chars().map(letter->scrabbleENScore[letter-'a']).sum();
+        System.out.println("Score of Hello: "+intScore.applyAsInt("hello"));
+        String bestWord = shakespearWords.stream()
+                .filter(word->scrabbleWords.contains(word))
+                .max(Comparator.comparing(score)).get();
+        System.out.println("Best Shakespear scrabble word: "+bestWord);
+        IntSummaryStatistics summary = shakespearWords.stream().parallel()
+                .filter(scrabbleWords::contains)
+                .mapToInt(intScore)
+                .summaryStatistics();
+        System.out.println("Shakespear scrabble word summary: "+summary);
     }
 }
