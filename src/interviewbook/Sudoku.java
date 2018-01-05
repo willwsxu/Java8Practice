@@ -100,13 +100,14 @@ public class Sudoku {
         int r=blank/SUDOKU_SIZE;
         int c=blank%SUDOKU_SIZE;
         for (int i=1; i<=9; i++) {
-            if ( !isValid(i, r,c) )
+            if ( !isValid(i, r, c) )
                 continue;
             board[r][c]=i;
             if ( backtracking(blank+1))
                 return true;
             board[r][c]=0;
         }
+        //out.println("r="+r+" c="+c+" fail");
         return false;
     }
     void print()
@@ -137,6 +138,11 @@ public class Sudoku {
         };
         Sudoku sudo=new Sudoku(puzzle);
         sudo.print();
+        out.println(sudo.isValid(2, 0, 3));
+        out.println(sudo.isValid(2, 0, 2));
+        out.println(sudo.isValid(3, 0, 2));
+        out.println(sudo.isValid(5, 0, 2));
+        out.println(sudo.isValid(6, 0, 2));
         if (!sudo.backtracking(0))
             out.println("no solution");
         sudo.print();
