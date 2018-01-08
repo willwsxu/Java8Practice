@@ -206,7 +206,7 @@ public class Sudoku {
             out.println();
         }
     }
-    public static void main(String[] args)
+    static void unittest()
     {
         String[] puzzle=new String[]{
             "...2.481.",
@@ -220,15 +220,49 @@ public class Sudoku {
             "8..4.3.5."
         };
         Sudoku sudo=new Sudoku(puzzle);
-        out.println(sudo.isCellValid(2, 0, 3));
-        out.println(sudo.isCellValid(2, 0, 2));
-        out.println(sudo.isCellValid(3, 0, 2));
-        out.println(sudo.isCellValid(5, 0, 2));
-        out.println(sudo.isCellValid(6, 0, 2));
-        out.println(sudo.isBoardValid());
+        out.println(sudo.isCellValid(2, 0, 3)==false);
+        out.println(sudo.isCellValid(2, 0, 2)==false);
+        out.println(sudo.isCellValid(3, 0, 2)==false);
+        out.println(sudo.isCellValid(5, 0, 2)==false);
+        out.println(sudo.isCellValid(6, 0, 2)==true);
+        out.println(sudo.isBoardValid()==true);
+        sudo.setMasks(6, 0, 2);
+        sudo.board[0][2]=6;
+        out.println(sudo.isBoardValid()==true);
+        out.println(sudo.isCellValid(6, 0, 2)==false);
+        sudo.resetMasks(6, 0, 2);
+        sudo.board[0][2]=0;
+        out.println(sudo.isBoardValid()==true);
+        out.println(sudo.isCellValid(6, 0, 2)==true);
+        sudo.setMasks(6, 0, 2);
+        sudo.setMasks(3, 0, 4);
+        sudo.board[0][2]=6;
+        sudo.board[0][4]=3;
+        sudo.setMasks(6, 6, 6);
+        sudo.setMasks(5, 7, 0);
+        sudo.board[6][6]=6;
+        sudo.board[7][0]=5;
+        out.println(sudo.isBoardValid()==true);
+        out.println(sudo.isCellValid(6, 8, 8)==false);
+        out.println(sudo.isCellValid(5, 8, 1)==false);
+        out.println(sudo.isCellValid(5, 7, 5)==false);
+        
+        sudo.resetMasks(6, 0, 2);
+        sudo.resetMasks(3, 0, 4);
+        sudo.resetMasks(6, 6, 6);
+        sudo.resetMasks(5, 7, 0);
+        sudo.board[0][2]=0;
+        sudo.board[0][4]=0;
+        sudo.board[6][6]=0;
+        sudo.board[7][0]=0;
         sudo.print();
         if (!sudo.backtracking(0))
             out.println("no solution");
         sudo.print();
+        
+    }
+    public static void main(String[] args)
+    {
+        unittest();
     }
 }
