@@ -22,30 +22,55 @@ public class Sudoku {
                     board[i][j]=b[i].charAt(j)-'0';
             }
         }
-        // calculate initial mask
+        // calculate initial mask for each row and col
+        computerRowColMasks(row_mask, col_mask);
+        // initial mask of each square
+        computerSquMasks(squ_mask);
+    }
+    boolean computerRowColMasks(int[] row_mask, int[] col_mask)
+    {
         for (int i=0; i<SUDOKU_SIZE; i++) {
             // row mask
-            for (int j=0; j<SUDOKU_SIZE; j++) {
-                if (board[i][j]==0)
-                    continue;
-                int bitmask=1<<(board[i][j]-1);
-                if ( (bitmask&row_mask[i]) > 0 ) // this digit already exist
-                    out.println("row "+(i+1)+ " col "+(j+1)+" bad val "+board[i][j]);
-                else
-                    row_mask[i] |= bitmask;
-            }
+            if (!computerRowMasks(i, row_mask))
+                return false;
             // col mask
-            for (int r=0; r<SUDOKU_SIZE; r++) {
-                if (board[r][i]==0)
-                    continue;
-                int bitmask=1<<(board[r][i]-1);
-                if ( (bitmask&col_mask[i]) > 0 ) // this digit already exist
-                    out.println("row "+(r+1)+ " col "+(i+1)+" bad val "+board[r][i]);
-                else
-                    col_mask[i] |= bitmask;
+            if (!computerColMasks(i, col_mask))
+                return false;
+        }       
+        return true;
+    }
+    boolean computerRowMasks(int r, int[] row_mask)
+    {
+        for (int j=0; j<SUDOKU_SIZE; j++) {
+            if (board[r][j]==0)
+                continue;
+            int bitmask=1<<(board[r][j]-1);
+            if ( (bitmask&row_mask[r]) > 0 )  {// this digit already exist
+                out.println("computerRowMasks: row "+(r+1)+ " col "+(j+1)+" bad val "+board[r][j]);
+                return false;
             }
+            else
+                row_mask[r] |= bitmask;
         }
-        // initial mask of each square
+        return true;
+    }
+    boolean computerColMasks(int c, int[] col_mask)
+    {
+        for (int r=0; r<SUDOKU_SIZE; r++) {
+            if (board[r][c]==0)
+                continue;
+            int bitmask=1<<(board[r][c]-1);
+            if ( (bitmask&col_mask[c]) > 0 ) { // this digit already exist
+                out.println("computerColMasks: row "+(r+1)+ " col "+(c+1)+" bad val "+board[r][c]);
+                return false;
+            }
+            else
+                col_mask[c] |= bitmask;
+        }
+        return true;   
+    }
+    boolean computerSquMasks(int[] squ_mask)
+    {
         for (int s=0; s<SUDOKU_SIZE; s++) {
             for (int r=0; r<SUDOKU_SIZE/3; r++) {
                 for (int c=0; c<SUDOKU_SIZE/3; c++) {
@@ -54,13 +79,16 @@ public class Sudoku {
                     if (board[r1][c1]==0)
                         continue;
                     int bitmask=1<<(board[r1][c1]-1);
-                    if ( (bitmask&squ_mask[s]) > 0 ) // this digit already exist
-                        out.println("row "+(r1+1)+ " col "+(c1+1)+" bad val "+board[r1][c1]);
+                    if ( (bitmask&squ_mask[s]) > 0 ) { // this digit already exist
+                        out.println("computerSquMasks: row "+(r1+1)+ " col "+(c1+1)+" bad val "+board[r1][c1]);
+                        return false;
+                    }
                     else
                         squ_mask[s] |= bitmask;
                 }
             }
         }
+        return true;
     }
     // convert (r,c) into single value pos= r*9+c;
     static final int CELLS=SUDOKU_SIZE*SUDOKU_SIZE;
@@ -80,7 +108,7 @@ public class Sudoku {
         int s=r/3; // starting value of big row of squares
         return s+c/3;
     }
-    boolean isValid(int val, int r, int c)
+    boolean isCellValid(int val, int r, int c)
     {
         int bitmask=1<<(val-1);
         if ( (row_mask[r]&bitmask) > 0)
@@ -92,6 +120,44 @@ public class Sudoku {
             return false;
         return true;
     }
+        
+    void printMasks(int r, int c)
+    {
+        out.println("Row mask "+r+":"+Integer.toBinaryString(row_mask[r]));
+        out.println("Col mask "+c+":"+Integer.toBinaryString(col_mask[c]));
+        int s=getSquare(r,c);
+        out.println("Squ mask "+s+":"+Integer.toBinaryString(squ_mask[c]));
+    }
+    void setMasks(int val, int r, int c)
+    {
+        int bitmask=1<<(val-1);
+        row_mask[r] |= bitmask;
+        col_mask[c] |= bitmask;
+        int s=getSquare(r,c);
+        squ_mask[s] |= bitmask;
+    }
+    void resetMasks(int val, int r, int c)
+    {
+        int bitmask=1<<(val-1);
+        int fullMask=(1<<SUDOKU_SIZE)-1;  // all 1s, 111111111
+        bitmask ^= fullMask;            // flip bit for val;
+        //out.println("val "+val+" mask="+Integer.toBinaryString(bitmask)+" full="+Integer.toBinaryString(fullMask));
+        int s=getSquare(r,c);
+        //out.println("mask before: "+Integer.toBinaryString(row_mask[r])+", "+Integer.toBinaryString(col_mask[c])+", "+Integer.toBinaryString(squ_mask[s]));
+        row_mask[r] &= bitmask;         // reset bit for val
+        col_mask[c] &= bitmask;
+        squ_mask[s] &= bitmask;
+        //out.println("mask after : "+Integer.toBinaryString(row_mask[r])+", "+Integer.toBinaryString(col_mask[c])+", "+Integer.toBinaryString(squ_mask[s]));
+    }
+    boolean isBoardValid()
+    {
+        int []r_mask=new int[SUDOKU_SIZE];
+        int []c_mask=new int[SUDOKU_SIZE];
+        int []s_mask=new int[SUDOKU_SIZE];
+        if ( !computerSquMasks(s_mask))
+            return false;
+        return computerRowColMasks(r_mask, c_mask);
+    }
     boolean backtracking(int pos)
     {
         int blank=findNextOpenCell(pos);
@@ -100,11 +166,28 @@ public class Sudoku {
         int r=blank/SUDOKU_SIZE;
         int c=blank%SUDOKU_SIZE;
         for (int i=1; i<=9; i++) {
-            if ( !isValid(i, r, c) )
+            if ( !isCellValid(i, r, c) )
                 continue;
+            if ( !isBoardValid() ) {
+                out.println("Invalid backtracking before: r="+r+" c="+c+" new val="+i);
+                return false;
+            }
+            //printMasks(r, c);
             board[r][c]=i;
+            setMasks(i, r, c);
+            //printMasks(r, c);
+            if ( !isBoardValid() ) {
+                out.println("Invalid backtracking after: r="+r+" c="+c+" new val="+i);
+                print();
+                resetMasks(i, r, c);
+                out.println(isCellValid(i, r, c));
+                return false;
+            }
             if ( backtracking(blank+1))
                 return true;
+            resetMasks(i, r, c);
+            //out.println("backtracking reset mask: r="+r+" c="+c+" new val="+i);
+            //printMasks(r, c);
             board[r][c]=0;
         }
         //out.println("r="+r+" c="+c+" fail");
@@ -118,7 +201,7 @@ public class Sudoku {
                     out.print(board[i][j]);
                 else
                     out.print(" ");
-                out.print(" ");
+                out.print(" | ");
             }
             out.println();
         }
@@ -126,7 +209,7 @@ public class Sudoku {
     public static void main(String[] args)
     {
         String[] puzzle=new String[]{
-            "...2.4.81.",
+            "...2.481.",
             ".4...8263",
             "3..16...4",
             "1...4.58.",
@@ -137,12 +220,13 @@ public class Sudoku {
             "8..4.3.5."
         };
         Sudoku sudo=new Sudoku(puzzle);
+        out.println(sudo.isCellValid(2, 0, 3));
+        out.println(sudo.isCellValid(2, 0, 2));
+        out.println(sudo.isCellValid(3, 0, 2));
+        out.println(sudo.isCellValid(5, 0, 2));
+        out.println(sudo.isCellValid(6, 0, 2));
+        out.println(sudo.isBoardValid());
         sudo.print();
-        out.println(sudo.isValid(2, 0, 3));
-        out.println(sudo.isValid(2, 0, 2));
-        out.println(sudo.isValid(3, 0, 2));
-        out.println(sudo.isValid(5, 0, 2));
-        out.println(sudo.isValid(6, 0, 2));
         if (!sudo.backtracking(0))
             out.println("no solution");
         sudo.print();
