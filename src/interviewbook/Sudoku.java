@@ -166,26 +166,27 @@ public class Sudoku {
         int r=blank/SUDOKU_SIZE;
         int c=blank%SUDOKU_SIZE;
         for (int i=1; i<=9; i++) {
-            if ( !isCellValid(i, r, c) )
+            /*if ( !isCellValid(i, r, c) )
                 continue;
             if ( !isBoardValid() ) {
                 out.println("Invalid backtracking before: r="+r+" c="+c+" new val="+i);
                 return false;
-            }
+            }*/
             //printMasks(r, c);
             board[r][c]=i;
-            setMasks(i, r, c);
+            //setMasks(i, r, c);
             //printMasks(r, c);
             if ( !isBoardValid() ) {
-                out.println("Invalid backtracking after: r="+r+" c="+c+" new val="+i);
-                print();
-                resetMasks(i, r, c);
-                out.println(isCellValid(i, r, c));
-                return false;
+                //out.println("Invalid backtracking after: r="+r+" c="+c+" new val="+i);
+                //print();
+                //resetMasks(i, r, c);
+                //out.println(isCellValid(i, r, c));
+                board[r][c]=0;
+                continue;
             }
             if ( backtracking(blank+1))
                 return true;
-            resetMasks(i, r, c);
+            //resetMasks(i, r, c);
             //out.println("backtracking reset mask: r="+r+" c="+c+" new val="+i);
             //printMasks(r, c);
             board[r][c]=0;
