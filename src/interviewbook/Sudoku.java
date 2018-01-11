@@ -2,6 +2,7 @@
 package interviewbook;
 
 import static java.lang.System.out;
+import java.util.Arrays;
 
 public class Sudoku {
     // mask for each row, col and square
@@ -46,7 +47,7 @@ public class Sudoku {
                 continue;
             int bitmask=1<<(board[r][j]-1);
             if ( (bitmask&row_mask[r]) > 0 )  {// this digit already exist
-                out.println("computerRowMasks: row "+(r+1)+ " col "+(j+1)+" bad val "+board[r][j]);
+                //out.println("computerRowMasks: row "+(r+1)+ " col "+(j+1)+" bad val "+board[r][j]);
                 return false;
             }
             else
@@ -61,7 +62,7 @@ public class Sudoku {
                 continue;
             int bitmask=1<<(board[r][c]-1);
             if ( (bitmask&col_mask[c]) > 0 ) { // this digit already exist
-                out.println("computerColMasks: row "+(r+1)+ " col "+(c+1)+" bad val "+board[r][c]);
+                //out.println("computerColMasks: row "+(r+1)+ " col "+(c+1)+" bad val "+board[r][c]);
                 return false;
             }
             else
@@ -80,7 +81,7 @@ public class Sudoku {
                         continue;
                     int bitmask=1<<(board[r1][c1]-1);
                     if ( (bitmask&squ_mask[s]) > 0 ) { // this digit already exist
-                        out.println("computerSquMasks: row "+(r1+1)+ " col "+(c1+1)+" bad val "+board[r1][c1]);
+                        //out.println("computerSquMasks: row "+(r1+1)+ " col "+(c1+1)+" bad val "+board[r1][c1]);
                         return false;
                     }
                     else
@@ -158,6 +159,15 @@ public class Sudoku {
             return false;
         return computerRowColMasks(r_mask, c_mask);
     }
+    boolean updateBoardMasks()
+    {
+        Arrays.fill(row_mask, 0);
+        Arrays.fill(col_mask, 0);
+        Arrays.fill(squ_mask, 0);
+        if ( !computerSquMasks(squ_mask))
+            return false;
+        return computerRowColMasks(row_mask, col_mask);
+    }
     boolean backtracking(int pos)
     {
         int blank=findNextOpenCell(pos);
@@ -166,32 +176,18 @@ public class Sudoku {
         int r=blank/SUDOKU_SIZE;
         int c=blank%SUDOKU_SIZE;
         for (int i=1; i<=9; i++) {
-            /*if ( !isCellValid(i, r, c) )
-                continue;
-            if ( !isBoardValid() ) {
-                out.println("Invalid backtracking before: r="+r+" c="+c+" new val="+i);
-                return false;
-            }*/
-            //printMasks(r, c);
             board[r][c]=i;
-            //setMasks(i, r, c);
-            //printMasks(r, c);
-            if ( !isBoardValid() ) {
-                //out.println("Invalid backtracking after: r="+r+" c="+c+" new val="+i);
+            if ( !updateBoardMasks() ) {  // invalid choice
+                //out.println("Invalid backtracking: r="+r+" c="+c);
                 //print();
-                //resetMasks(i, r, c);
-                //out.println(isCellValid(i, r, c));
-                board[r][c]=0;
+                board[r][c]=0; // still want to know why this line is needed
                 continue;
             }
             if ( backtracking(blank+1))
                 return true;
-            //resetMasks(i, r, c);
-            //out.println("backtracking reset mask: r="+r+" c="+c+" new val="+i);
-            //printMasks(r, c);
             board[r][c]=0;
         }
-        //out.println("r="+r+" c="+c+" fail");
+        //out.println("r="+r+" c="+c+" fail");  can fail if previous choice is wrong
         return false;
     }
     void print()
@@ -262,8 +258,43 @@ public class Sudoku {
         sudo.print();
         
     }
+    static void test()
+    {        
+        String[] puzzle=new String[]{
+            "2957..86.",
+            ".31865.2.",
+            "8.6......",
+            "..7.5...6",
+            "...387...",
+            "5...167..",
+            "...5..1.9",
+            ".2.6..35.",
+            ".54..8672"
+        };
+        Sudoku sudo=new Sudoku(puzzle);
+        if (!sudo.backtracking(0))
+            out.println("no solution");
+        sudo.print();
+        
+        puzzle=new String[]{
+            "3.65.84..",
+            "52.......",
+            ".87....31",
+            "..3.1..8.",
+            "9..863..5",
+            ".5..9.6..",
+            "13....25.",
+            ".......74",
+            "..52.63.."
+        };
+        out.println();
+        sudo=new Sudoku(puzzle);
+        if (!sudo.backtracking(0))
+            out.println("no solution");
+        sudo.print();
+    }
     public static void main(String[] args)
     {
-        unittest();
+        test();
     }
 }
