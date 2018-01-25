@@ -36,12 +36,28 @@ public class LongestComnSubSeq {
     
     int lcs_bottomup(String s1, String s2)
     {
-        return 0;
+        int m=s1.length();
+        int n=s2.length();
+        dp=new int[m+1][n+1];
+        for (int i=0; i<=m; i++) {
+            for (int j=0; j<=n; j++) {
+                if (i==0 || j==0)  // 0 mean no char in string
+                    dp[i][j]=0;
+                // neither i or j is 0
+                else if (s1.charAt(i-1)==s2.charAt(j-1))
+                    dp[i][j]=1+dp[i-1][j-1];
+                else
+                    dp[i][j]=max(dp[i-1][j], dp[i][j-1]);
+            }
+        }
+        return dp[m][n];
     }
             
     public static void main(String[] args)
     {
         out.println(new LongestComnSubSeq().lcs_recurse("ABCDGH", "AEDFHR")==3);
         out.println(new LongestComnSubSeq().lcs_recurse("AGGTAB", "GXTXAYB")==4);
+        out.println(new LongestComnSubSeq().lcs_bottomup("ABCDGH", "AEDFHR")==3);
+        out.println(new LongestComnSubSeq().lcs_bottomup("AGGTAB", "GXTXAYB")==4);
     }
 }
