@@ -50,6 +50,7 @@ public class LongestReptSubSeq {
     }
     public static void main(String[] args)
     {
+        // test failed, how to prevent second A in string to be used twice
         out.println(new LongestReptSubSeq().lrs_bottomup("AAABEBCDD")); //ABD
     }
 }
