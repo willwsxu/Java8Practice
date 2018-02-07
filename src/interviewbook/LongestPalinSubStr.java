@@ -7,7 +7,7 @@ import static java.lang.System.out;
 
 public class LongestPalinSubStr {
     int dp[][];
-    // test palindrome from len 1 to n, only chech char at each end
+    // test palindrome from len 1 to n, only check char at each end
     String bottomup(String s)
     {
         int n=s.length();
