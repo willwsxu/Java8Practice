@@ -68,7 +68,9 @@ public class ThreeSum {
             while (second<third) {
                 sum3 = nums[i]+nums[second]+nums[third];
                 int diff=sum3-target;
-                if (diff>delta)
+                if (diff==0)
+                    return sum3;
+                else if (diff>delta)
                     third--;
                 else if (diff<-delta) {
                     second++;
@@ -76,8 +78,10 @@ public class ThreeSum {
                 else {
                     ans=sum3;
                     delta=Math.abs(diff);
-                    second++;
-                    third--;
+                    if (diff>0)
+                        third--;
+                    else
+                        second++;
                 }
             }
         }
@@ -88,7 +92,8 @@ public class ThreeSum {
         List<List<Integer>> ans=threeSum(new int[]{-10,-10,-10,0,0,20,20});
         System.out.println(ans);
                 
-        System.out.println(threeSumClosest(new int[]{-10,-10,-10,0,0,20,20}, 11));
-        System.out.println(threeSumClosest(new int[]{1,1,-1,2}, 2));
+        System.out.println(threeSumClosest(new int[]{-10,-10,-10,0,0,20,20}, 11)==10);
+        System.out.println(threeSumClosest(new int[]{1,1,-1}, 2)==1);
+        System.out.println(threeSumClosest(new int[]{0,2,1,-3}, 1)==0);
     }
 }
