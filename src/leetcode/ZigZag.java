@@ -4,6 +4,7 @@
 package leetcode;
 
 public class ZigZag {
+    static public String convert_v2(String s, int numRows) {
         // pattern repeats [1, 2n-1), 1 to n go down same column
         // n-1 to 2n-2 go up like staircase
         if (numRows<=1)
@@ -33,34 +34,28 @@ public class ZigZag {
             sb[0].append(sb[i].toString());
         return sb[0].toString();
     }
+    // faster solution,beat 89%
     static public String convert(String s, int numRows) {
         if (numRows<=1)
             return s;
         StringBuilder sb[]=new StringBuilder[numRows];
         for (int i=0; i<numRows; i++)
             sb[i]=new StringBuilder();
-        int row=0;
-        boolean down=true;
-        for (int i=0; i<s.length(); i++)
+        int i=0;
+        while ( i<s.length())
         {
-            sb[row].append(s.charAt(i));
-            if (down) {
-                if (row==numRows-1) { // last row, flip to go up
-                    row--;
-                    down=false;
-                }
-                else
-                    row++;
-            } else {
-                if (row==0) { // first row
-                    row++;
-                    down=true;
-                }
-                else
-                    row--;
+            int end=s.length()-i;
+            end = end>numRows?numRows:end;
+            for (int j=0; j<end; j++, i++) {
+                sb[j].append(s.charAt(i));
+            }
+            end = numRows-2-(s.length()-i);
+            end = end<=0? 0: end;
+            for (int j=numRows-2; j>end; j--, i++) {
+                sb[j].append(s.charAt(i));
             }
         }
-        for (int i=1; i<numRows; i++)
+        for (i=1; i<numRows; i++)
             sb[0].append(sb[i].toString());
         return sb[0].toString();
     }
