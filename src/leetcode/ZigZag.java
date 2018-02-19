@@ -44,17 +44,12 @@ public class ZigZag {
         int i=0;
         while ( i<s.length())
         {
-            int end=s.length()-i;
-            end = end>numRows?numRows:end;
-            for (int j=0; j<end; j++, i++) {
+            for (int j=0; j<numRows && i<s.length(); j++, i++)
                 sb[j].append(s.charAt(i));
-            }
-            end = numRows-2-(s.length()-i);
-            end = end<=0? 0: end;
-            for (int j=numRows-2; j>end; j--, i++) {
+            for (int j=numRows-2; j>0 && i<s.length(); j--, i++)
                 sb[j].append(s.charAt(i));
-            }
         }
+        
         for (i=1; i<numRows; i++)
             sb[0].append(sb[i].toString());
         return sb[0].toString();
