@@ -4,28 +4,6 @@
 package leetcode;
 
 public class ZigZag {
-    static public String convert_x(String s, int numRows) {
-        int toprow=numRows/2;
-        int bottomrow=numRows-toprow-1;
-        int step=numRows+1; // step for rows above or below
-        StringBuilder sb=new StringBuilder();
-        for (int i=0; i<toprow; i++) {
-            for (int j=i; j<s.length(); j+=step)
-                sb.append(s.charAt(j));
-        }
-        // middle row
-        for (int i=toprow; i<s.length(); i += step) {
-            sb.append(s.charAt(i));
-            if (i+1+bottomrow<s.length()) // must check string length
-                sb.append(s.charAt(i+1+bottomrow));
-        }
-        for (int i=0; i<bottomrow; i++) {
-            for (int j=i+1+toprow; j<s.length(); j+=step)
-                sb.append(s.charAt(j));
-        }
-        return sb.toString();
-    }
-    static public String convert(String s, int numRows) {
         // pattern repeats [1, 2n-1), 1 to n go down same column
         // n-1 to 2n-2 go up like staircase
         if (numRows<=1)
@@ -49,6 +27,37 @@ public class ZigZag {
             end = end>numRows-2?numRows-2:end;
             for (int up=0; up<end; up++) {
                 sb[numRows-2-up].append(s.charAt(from+up));
+            }
+        }
+        for (int i=1; i<numRows; i++)
+            sb[0].append(sb[i].toString());
+        return sb[0].toString();
+    }
+    static public String convert(String s, int numRows) {
+        if (numRows<=1)
+            return s;
+        StringBuilder sb[]=new StringBuilder[numRows];
+        for (int i=0; i<numRows; i++)
+            sb[i]=new StringBuilder();
+        int row=0;
+        boolean down=true;
+        for (int i=0; i<s.length(); i++)
+        {
+            sb[row].append(s.charAt(i));
+            if (down) {
+                if (row==numRows-1) { // last row, flip to go up
+                    row--;
+                    down=false;
+                }
+                else
+                    row++;
+            } else {
+                if (row==0) { // first row
+                    row++;
+                    down=true;
+                }
+                else
+                    row--;
             }
         }
         for (int i=1; i<numRows; i++)
