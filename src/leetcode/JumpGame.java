@@ -14,15 +14,29 @@ public class JumpGame implements Runnable {
             return false;
         if ( dp[pos]!=0 )    // check if this position is aready computed
             return dp[pos]==1;
-        int ans=-1;
-        for (int i=nums[pos]; i>=1; i--) {
+        if ( nums[pos]==0 ) {
+            dp[pos]=-1;
+            return false;
+        }
+        boolean ans=jump(nums, pos+1);
+        if (ans) {
+            dp[pos]=1;
+            return true;            
+        }
+        int end=1;
+        if (pos<nums.length-1 )  //prune postion that pos+1 can reach
+            end = nums[pos+1]+1;
+        for (int i=nums[pos]; i>=end; i--) {
             if (jump(nums, i+pos)) {
-                ans=1;  // succeed
+                ans=true;  // succeed
                 break;
             }
         }
-        dp[pos]=ans;
-        return ans==1;        
+        if (ans)
+            dp[pos]=1;
+        else 
+            dp[pos]=-11;
+        return ans;        
     }
     boolean ans;
     int[]nums;
