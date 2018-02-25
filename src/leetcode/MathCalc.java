@@ -41,7 +41,33 @@ public class MathCalc {
         }
         return divideLong(dividend, divisor);
     }
-    public static void main(String[] args)
+    
+    public double myPow(double x, int n) {
+        if (x==0 || x==1)
+            return x;
+        if (n==0)
+            return 1;
+        if (n==Integer.MIN_VALUE)
+            return 1/x *myPow(1/x,Integer.MAX_VALUE);
+        else if (n<0) {
+            return myPow(1/x,-n);
+        }
+        double ans=1;
+        while(n>0) {
+            double prod=x;
+            int multiple=1;
+            while (multiple<<1 <=n && multiple<=Integer.MAX_VALUE/2) {
+                multiple <<=1;
+                prod *= prod;
+                //System.out.println(multiple);
+            }
+            ans *=prod;
+            n -= multiple;
+            //System.out.println(n);
+        }
+        return ans;
+    }
+    static void testDivide()
     {
         System.out.println(new MathCalc().divide(30,4)==7);
         System.out.println(new MathCalc().divide(30,0));
@@ -53,6 +79,15 @@ public class MathCalc {
         System.out.println(new MathCalc().divide(-2147483648,-1)==2147483647);
         System.out.println(new MathCalc().divide(-2147483648,1)==-2147483648);
         System.out.println(new MathCalc().divide(-2147483648,-2));
-        System.out.println(new MathCalc().divide(-2147483648,-2147483648)==1);
+        System.out.println(new MathCalc().divide(-2147483648,-2147483648)==1);        
+    }
+    public static void main(String[] args)
+    {
+        System.out.println(new MathCalc().myPow(1.1, 2));
+        System.out.println(new MathCalc().myPow(1.1, 0));
+        System.out.println(new MathCalc().myPow(1, 100000000));
+        System.out.println(new MathCalc().myPow(2, 3));
+        System.out.println(new MathCalc().myPow(2, -3));
+        System.out.println(new MathCalc().myPow(0.00001, 2147483647));
     }
 }
