@@ -9,7 +9,7 @@ class ListNode {
     ListNode next;
     ListNode(int x) { val = x; }
 }
-public class AddTwoNumbers {
+public class SingleLinkedList {
     static public ListNode addTwoNumbers(ListNode l1, ListNode l2)
     {
         ListNode head = null;
@@ -72,11 +72,43 @@ public class AddTwoNumbers {
         }
         System.out.println();
     }
-    public static void main(String[] args)
+    
+    static public ListNode removeNthFromEnd(ListNode head, int n) {
+        // two pointers
+        ListNode nth=head;  // n+1 the node from last
+        ListNode last=head;
+        while (n-->0 && last!=null)
+            last=last.next;
+        if (last == null)
+            return head.next;
+        while (last.next !=null) { // find n+1 node from end
+            last =last.next;
+            nth=nth.next;
+        }
+        nth.next=nth.next.next;
+        return head;
+    }
+
+    static void testAddTwoNumber()
     {
         ListNode l1=create(new int[]{2,4,9,9});
         ListNode l2=create(new int[]{5,6,4});
         ListNode sum=addTwoNumbers(l1,l2);
-        print(sum);
+        print(sum);        
+    }
+    public static void main(String[] args)
+    {
+        ListNode l1=create(new int[]{2,4,8,9});
+        ListNode ans=removeNthFromEnd(l1, 3);
+        print(ans);
+        l1=create(new int[]{2,4,8,9});
+        ans=removeNthFromEnd(l1, 4);
+        print(ans);
+        l1=create(new int[]{2,4,8,9});
+        ans=removeNthFromEnd(l1, 1);
+        print(ans);
+        l1=create(new int[]{2});
+        ans=removeNthFromEnd(l1, 1);
+        print(ans);
     }
 }
