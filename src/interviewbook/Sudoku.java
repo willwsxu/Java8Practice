@@ -159,6 +159,24 @@ public class Sudoku {
             return false;
         return computerRowColMasks(r_mask, c_mask);
     }
+    
+    public boolean isValidSudoku(char[][] board) {  //leetcode
+        for (int i=0; i<SUDOKU_SIZE; i++) {
+            for (int j=0; j<SUDOKU_SIZE; j++) {
+                if ( board[i][j]=='.')
+                    this.board[i][j]=0;
+                else
+                    this.board[i][j]=board[i][j]-'0';
+            }
+        }
+        int []r_mask=new int[SUDOKU_SIZE];
+        int []c_mask=new int[SUDOKU_SIZE];
+        int []s_mask=new int[SUDOKU_SIZE];
+        if ( !computerSquMasks(s_mask))
+            return false;
+        return computerRowColMasks(r_mask, c_mask);
+        
+    }
     boolean updateBoardMasks()
     {
         Arrays.fill(row_mask, 0);
