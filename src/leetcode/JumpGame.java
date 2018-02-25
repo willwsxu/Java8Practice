@@ -40,7 +40,7 @@ public class JumpGame implements Runnable {
     }
     boolean ans;
     int[]nums;
-    public boolean canJump(int[] nums) {
+    public boolean canJump_dp(int[] nums) {
         this.nums=nums;
         dp=new int[nums.length]; // 0 initial state, -1 failed, 1 succeed
         Thread t =new Thread(null, this, "big callstack", 1<<28);
@@ -57,6 +57,23 @@ public class JumpGame implements Runnable {
     public void run()
     {
         ans=jump(nums, 0);
+    }
+    
+    
+    public boolean canJump(int[] nums) {  //O(n)
+        int maxReach=0; // initial reachable index
+        int n=nums.length-1;
+        if (n<=0)
+            return true;
+        for (int i=0; i<=maxReach; i++) {
+            int next=i+nums[i];
+            if (next>maxReach) { // faster than using max, beats 89%
+                maxReach=next; // furtherest you can jump to up to position i
+                if (maxReach>=n)
+                    return true;
+            }
+        }
+        return false;
     }
     public static void main(String[] args)
     {
