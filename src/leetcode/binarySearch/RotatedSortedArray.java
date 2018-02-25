@@ -3,7 +3,7 @@
  * (i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2).
  * You are given a target value to search. If found in the array return its index, otherwise return -1.
  */
-package leetcode;
+package leetcode.binarySearch;
 
 public class RotatedSortedArray {
     static public int search(int[] nums, int target) {

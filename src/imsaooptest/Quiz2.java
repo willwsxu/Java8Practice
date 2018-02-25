@@ -1,7 +1,7 @@
 /*
  * Annie oop test answer key
  */
-package ooptest;
+package imsaooptest;
 
 public class Quiz2 {
     

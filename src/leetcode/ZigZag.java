@@ -44,9 +44,9 @@ public class ZigZag {
         int i=0;
         while ( i<s.length())
         {
-            for (int j=0; j<numRows && i<s.length(); j++, i++)
+            for (int j=0; j<numRows && i<s.length(); j++, i++) // straingt down
                 sb[j].append(s.charAt(i));
-            for (int j=numRows-2; j>0 && i<s.length(); j--, i++)
+            for (int j=numRows-2; j>0 && i<s.length(); j--, i++) // slant up
                 sb[j].append(s.charAt(i));
         }
         
