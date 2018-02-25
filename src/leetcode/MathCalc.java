@@ -4,7 +4,7 @@
  */
 package leetcode;
 
-public class IntDivide {
+public class MathCalc {
     int divideLong(long dividend, long divisor) {
         // need to deal with sign separately
         int sign=1;
@@ -43,16 +43,16 @@ public class IntDivide {
     }
     public static void main(String[] args)
     {
-        System.out.println(new IntDivide().divide(30,4)==7);
-        System.out.println(new IntDivide().divide(30,0));
-        System.out.println(new IntDivide().divide(0,4)==0);
-        System.out.println(new IntDivide().divide(1,4)==0);
-        System.out.println(new IntDivide().divide(1000000000,2)==500000000);
-        System.out.println(new IntDivide().divide(4,4)==1);
-        System.out.println(new IntDivide().divide(3,-2)==-1);
-        System.out.println(new IntDivide().divide(-2147483648,-1)==2147483647);
-        System.out.println(new IntDivide().divide(-2147483648,1)==-2147483648);
-        System.out.println(new IntDivide().divide(-2147483648,-2));
-        System.out.println(new IntDivide().divide(-2147483648,-2147483648)==1);
+        System.out.println(new MathCalc().divide(30,4)==7);
+        System.out.println(new MathCalc().divide(30,0));
+        System.out.println(new MathCalc().divide(0,4)==0);
+        System.out.println(new MathCalc().divide(1,4)==0);
+        System.out.println(new MathCalc().divide(1000000000,2)==500000000);
+        System.out.println(new MathCalc().divide(4,4)==1);
+        System.out.println(new MathCalc().divide(3,-2)==-1);
+        System.out.println(new MathCalc().divide(-2147483648,-1)==2147483647);
+        System.out.println(new MathCalc().divide(-2147483648,1)==-2147483648);
+        System.out.println(new MathCalc().divide(-2147483648,-2));
+        System.out.println(new MathCalc().divide(-2147483648,-2147483648)==1);
     }
 }
