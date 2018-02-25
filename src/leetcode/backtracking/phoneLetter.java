@@ -1,11 +1,12 @@
 /*
  * Given a digit string, return all possible letter combinations that the number could represent.
  */
-package leetcode;
+package leetcode.backtracking;
 
 import java.util.ArrayList;
 import java.util.List;
 
+// simple backtracking
 public class phoneLetter {
     void recurse(String digits, int i, String letters, List<String> ans)
     {
