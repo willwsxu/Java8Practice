@@ -16,7 +16,7 @@ public class WordBreak {
         dp=new boolean[n+1]; // need extra to store last word break
         dp[0]=true;  //
         for (int pos=1; pos<=n; pos++) {
-            for (int start=pos-1; start>=0; start--) {
+            for (int start=pos-1; start>=0; start--) { // go backwards to find good word
                 if (dp[start]) { //previous work break
                     if (wordDict.contains(s.substring(start, pos))) {
                         dp[pos]=true; // find a word from last break
