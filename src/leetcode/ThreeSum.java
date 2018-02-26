@@ -51,7 +51,7 @@ public class ThreeSum {
     {
         List<List<Integer>> ans=new ArrayList<>();
         for (int i=start; i<nums.length-2; i++) { // try each as first number of 3 sum
-            //if (nums[i]>target)  // too big, done
+            //if (nums[i]>target)  // false assumption
             //    break;
             if (i>start && nums[i]==nums[i-1])  // same number, no need to try again
                 continue;
@@ -60,8 +60,8 @@ public class ThreeSum {
             while (second<third) {
                 //System.out.println("second="+second+",third="+third);
                 int sum=nums[i]+nums[second];
-                if (sum>target)
-                    break;
+                //if (sum>target)  //false assumption
+                //    break;
                 sum += nums[third];
                 if ( sum>target) // sum too big, move third number left
                     third--;
@@ -151,10 +151,12 @@ public class ThreeSum {
         System.out.println(threeSumClosest(new int[]{1,1,-1}, 2)==1);
         System.out.println(threeSumClosest(new int[]{0,2,1,-3}, 1)==0);
         
-        System.out.println(fourSum(new int[]{1, 0, -1, 0, -2, 2}, 0));
+        System.out.println(fourSum(new int[]{1, 0, -1, 0, -2, 2}, 0)); //[[-1, 1, 2, -2], [0, 0, 2, -2], [0, 0, 1, -1]]
         System.out.println(fourSum(new int[]{0,0,0,0}, 0));
-        System.out.println(fourSum(new int[]{1,-2,-5,-4,-3,3,3,5}, -11));
+        System.out.println(fourSum(new int[]{1,-2,-5,-4,-3,3,3,5}, -11)); //[[-4, -3, 1, -5]]
+        System.out.println(fourSum(new int[]{-1,0,-5,-2,-2,-4,0,1,-2}, -9));//[[-5,-4,-1,1],[-5,-4,0,0],[-5,-2,-2,0],[-4,-2,-2,-1]]
         
         System.out.println(threeSum(new int[]{-4,-3,-2,1,3,3,5}, 0, -6));
+        System.out.println(threeSum(new int[]{-2,-2,-2,-1,0,0,1}, 0, -5));
     }
 }
