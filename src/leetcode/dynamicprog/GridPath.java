@@ -8,7 +8,7 @@ package leetcode.dynamicprog;
 
 import java.util.Arrays;
 
-public class UniquePath {
+public class GridPath {
     
     public int uniquePaths(int m, int n) {
         count =new int[m][n];
@@ -59,24 +59,52 @@ public class UniquePath {
             Arrays.fill(r, -1);
         return visit(obstacleGrid,0,0);        
     }
+    
+    int dpval[][];
+    private int minSumVisit(int[][]grid, int i, int j) {
+        int m=grid.length-1;
+        int n=grid[0].length-1;
+        int val=Integer.MAX_VALUE;
+        if (i==m && j==n)
+            return grid[i][j];
+        if (dpval[i][j]>=0)
+            return dpval[i][j];
+        if (i<m)
+            val=Integer.min(val, minSumVisit(grid, i+1,j));
+        if (j<n)
+            val=Integer.min(val, minSumVisit(grid, i,j+1));
+        dpval[i][j]=val+grid[i][j];
+        return dpval[i][j];
+    }
+    public int minPathSum(int[][] grid) {  // beats 93%
+        if (grid.length==0)
+            return 0;
+        dpval = new int[grid.length][grid[0].length];
+        for (int[] r: dpval)
+            Arrays.fill(r, -1);
+        return minSumVisit(grid, 0,0);
+    }
     public static void main(String[] args)
     {
-        System.out.println(new UniquePath().uniquePaths(1,2)==1);
-        System.out.println(new UniquePath().uniquePaths(2,1)==1);
-        System.out.println(new UniquePath().uniquePaths(2,2)==2);
-        System.out.println(new UniquePath().uniquePaths(10,10)==48620);
+        System.out.println(new GridPath().uniquePaths(1,2)==1);
+        System.out.println(new GridPath().uniquePaths(2,1)==1);
+        System.out.println(new GridPath().uniquePaths(2,2)==2);
+        System.out.println(new GridPath().uniquePaths(10,10)==48620);
         
         int grid[][]=new int[3][3];
         for (int[] r: grid)
             Arrays.fill(r, 0);
         grid[1][1]=1;
-        System.out.println(new UniquePath().uniquePathsWithObstacles(grid)==2);
+        System.out.println(new GridPath().uniquePathsWithObstacles(grid)==2);
         
         grid[0][0]=1;
-        System.out.println(new UniquePath().uniquePathsWithObstacles(grid)==0);
+        System.out.println(new GridPath().uniquePathsWithObstacles(grid)==0);
         
         grid[0][0]=0;
         grid[2][2]=1;
-        System.out.println(new UniquePath().uniquePathsWithObstacles(grid)==0);
+        System.out.println(new GridPath().uniquePathsWithObstacles(grid)==0);
+        
+        int [][]g=new int[][]{{1,3,1},{1,5,1},{4,2,1}};
+        System.out.println(new GridPath().minPathSum(g));
     }
 }
