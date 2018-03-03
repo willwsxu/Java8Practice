@@ -34,7 +34,7 @@ public class WordBreak {
     	dpBreak[s.length()]=1;
     	return wordBreak(s, wordDict, 0);
     }
-    // backtracking too slow
+
     int dpBreak[];
     private boolean wordBreak(String s, List<String> wordDict, int pos) {
         if (pos>s.length())
@@ -44,7 +44,6 @@ public class WordBreak {
         boolean good=false;
         for (String word : wordDict) {
             if (s.startsWith(word, pos)) {
-                //System.out.println(word+" at "+pos);
                 if (wordBreak(s, wordDict, pos+word.length())) {
                     good = true;
                     break;
@@ -60,6 +59,7 @@ public class WordBreak {
         ArrayList<String> dict=new ArrayList<>(Arrays.asList("a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa"));
         System.out.println(new WordBreak().wordBreak(s, dict));
         System.out.println(new WordBreak().wordBreakRecur(s, dict));
+        
         s="leetcode";
         dict=new ArrayList<>(Arrays.asList("leet","code"));
         System.out.println(new WordBreak().wordBreak(s, dict));
