@@ -1,5 +1,5 @@
 /*
- * Given a tring, find longest substring which is palindrome
+ * Given a string, find longest substring which is palindrome
  */
 package interviewbook;
 

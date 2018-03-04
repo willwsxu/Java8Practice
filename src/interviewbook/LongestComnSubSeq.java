@@ -30,7 +30,7 @@ public class LongestComnSubSeq {
         dp=new int[s1.length()][s2.length()];
         for (int [] r: dp)
             Arrays.fill(r, -1);
-        // start from end of string, postion cur base 0
+        // start from end of string, position cur base 0
         return lcs_recurse(s1, s2, s1.length()-1, s2.length()-1);
     }
     
