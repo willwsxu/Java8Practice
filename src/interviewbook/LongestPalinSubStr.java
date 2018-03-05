@@ -82,6 +82,8 @@ public class LongestPalinSubStr {
     public int countSubstrings(String s) { // 19ms beat 45%
         int n=s.length();
         int count=n;
+        if (n<=1)
+            return n;
         for (int j=1; j<n-1; j++) { // extend palindrome from each index, odd length
             int extend=Integer.min(j, n-1-j);
             for (int k=1; k<=extend; k++) {
@@ -90,21 +92,20 @@ public class LongestPalinSubStr {
                 else
                     break;
             }
-        }
-        //System.out.println("odd count "+count);
-        for (int j=0; j<n-1; j++) { // len=2, even length
             if (s.charAt(j+1)!=s.charAt(j))
                 continue;
-            
+            // even length
             count++;
-            int extend=Integer.min(j, n-2-j);
+            extend=Integer.min(j, n-2-j);
             for (int k=1; k<=extend; k++) {
                 if (s.charAt(j-k)==s.charAt(j+k+1))
                     count++;
                 else
                     break;
             }
-        }    
+        }
+        if (s.charAt(0)==s.charAt(1))
+            count++;
         return count;
     }
     public static void main(String[] args)
