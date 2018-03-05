@@ -68,7 +68,7 @@ public class MatrixDP {
     }    
     
 
-    // Given two integer arrays A and B, return the maximum length of an subarray that appears in both arrays.
+    // Given two integer arrays A and B, return the maximum length of a subarray that appears in both arrays.
     static public int findLength(int[] A, int[] B) {
     	int m=A.length;
     	int n=B.length;
