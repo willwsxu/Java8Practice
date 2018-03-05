@@ -44,10 +44,10 @@ public class LongestPalinSubStr {
         return s.substring(start, start+maxlen);
     }
 
-    public int countSubstrings(String s) {
+    public int countSubstrings_dp(String s) {  // 35ms
         int n=s.length();
         dp=new int[2][n];  // only need to keep previous 2 len
-        int count=s.length();
+        int count=n;
         Arrays.fill(dp[0], 1); // len 1
         
         for (int j=0; j<n-1; j++) { // len=2
@@ -79,6 +79,34 @@ public class LongestPalinSubStr {
         }
         return count;
     }
+    public int countSubstrings(String s) { // 19ms beat 45%
+        int n=s.length();
+        int count=n;
+        for (int j=1; j<n-1; j++) { // extend palindrome from each index, odd length
+            int extend=Integer.min(j, n-1-j);
+            for (int k=1; k<=extend; k++) {
+                if (s.charAt(j-k)==s.charAt(j+k))
+                    count++;
+                else
+                    break;
+            }
+        }
+        //System.out.println("odd count "+count);
+        for (int j=0; j<n-1; j++) { // len=2, even length
+            if (s.charAt(j+1)!=s.charAt(j))
+                continue;
+            
+            count++;
+            int extend=Integer.min(j, n-2-j);
+            for (int k=1; k<=extend; k++) {
+                if (s.charAt(j-k)==s.charAt(j+k+1))
+                    count++;
+                else
+                    break;
+            }
+        }    
+        return count;
+    }
     public static void main(String[] args)
     {
         out.println(new LongestPalinSubStr().bottomup("aaabccbdadd"));
@@ -87,5 +115,6 @@ public class LongestPalinSubStr {
         out.println(new LongestPalinSubStr().countSubstrings("abc")==3);
         out.println(new LongestPalinSubStr().countSubstrings("a")==1);
         out.println(new LongestPalinSubStr().countSubstrings("aa")==3);
+        out.println(new LongestPalinSubStr().countSubstrings("aaaaa")==15);
     }
 }
