@@ -79,7 +79,7 @@ public class LongestPalinSubStr {
         }
         return count;
     }
-    public int countSubstrings(String s) { // 19ms beat 45%
+    public int countSubstrings_v2(String s) { // 19ms beat 45%
         int n=s.length();
         if (n<=1)
             return n;
@@ -106,6 +106,31 @@ public class LongestPalinSubStr {
         }
         if (s.charAt(0)==s.charAt(1))
             count++;
+        return count;
+    }
+        
+    int count=0;
+    private void count(String s, int start, int end)
+    {
+        int n=s.length();
+        while (start>=0 && end <n) {
+            if (s.charAt(start)==s.charAt(end)) {
+                count++;
+                start--;
+                end++;
+            }
+            else 
+                break;
+        }
+    }
+    public int countSubstrings(String s) { //12ms, beat 65%
+        int n=s.length();
+        if (n<=1)
+            return n;
+        for (int j=0; j<n; j++) {
+            count(s, j, j);
+            count(s, j, j+1);
+        }
         return count;
     }
     public static void main(String[] args)
