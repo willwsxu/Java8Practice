@@ -12,16 +12,16 @@ public class HouseRobber {
     public int rob(int[] nums) {
         dp=new int[nums.length];
         Arrays.fill(dp,-1);
-        return rob(nums,0);
+        return rob(nums,0,nums.length-1);
     }
     int dp[];
-    int rob(int[] nums, int at) {
-        if (at>=nums.length)
+    int rob(int[] nums, int at, int end) {
+        if (at>end)
             return 0;
         if (dp[at]>=0)
             return dp[at];
-        int a1=nums[at]+rob(nums, at+2);
-        int a2=rob(nums,at+1);
+        int a1=nums[at]+rob(nums, at+2, end);
+        int a2=rob(nums,at+1, end);
         dp[at] = Integer.max(a1,a2);
         return dp[at];
     }
@@ -35,14 +35,9 @@ public class HouseRobber {
         dp=new int[nums.length];
         Arrays.fill(dp,-1);
         
-        int last=nums[nums.length-1];
-        nums[nums.length-1]=0;
-        int a1=nums[0]+rob(nums, 2);
-        nums[nums.length-1]=last;
+        int a1=rob(nums, 0, nums.length-2);// step 1, take first, not last
         Arrays.fill(dp,-1); // reset
-        int a2=rob(nums,1);
-        //System.out.println(a1+" "+a2);
-        //System.out.println(Arrays.toString(nums));
+        int a2=rob(nums,1, nums.length-1);// step 2, not take first
         return Integer.max(a1, a2);
     }
     public static void main(String[] args)
