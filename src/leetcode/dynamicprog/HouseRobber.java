@@ -8,8 +8,20 @@ package leetcode.dynamicprog;
 import java.util.Arrays;
 
 public class HouseRobber {
-    
+        
     public int rob(int[] nums) {
+        int ans=0;
+        int prev=0;
+        int prevprev=0;
+        for (int i=0; i<nums.length; i++) {
+            ans = Integer.max(prevprev+nums[i], prev);
+            prevprev=prev;
+            prev=ans;
+        }
+        return ans;
+    }
+    
+    public int rob_dp(int[] nums) {
         dp=new int[nums.length];
         Arrays.fill(dp,-1);
         return rob(nums,0,nums.length-1);
