@@ -5,8 +5,8 @@
  */
 package leetcode.prefixsum;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class SubArraySum {
@@ -23,14 +23,18 @@ public class SubArraySum {
             }
             return false;
         }
-        Set<Integer> remainders=new HashSet<>();
-        int prefixRem=nums[0]%k;
-        remainders.add(prefixRem);
-        for (int i=1; i<nums.length; i++) {
+        Map<Integer, Integer> remainders=new HashMap<>();
+        int prefixRem=0;
+        remainders.put(prefixRem, 0);  //initial state
+        for (int i=0; i<nums.length; i++) {
             prefixRem=(prefixRem+nums[i])%k;
-            if (prefixRem==0 || remainders.contains(prefixRem))
+            Integer found=remainders.get(prefixRem);
+            if (found==null) {
+                remainders.put(prefixRem, i+1);
+                continue;
+            }
+            if (i-found>0)
                 return true;
-            remainders.add(prefixRem);
         }
         return false;
     }
