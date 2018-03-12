@@ -48,6 +48,6 @@ public class SubArraySum {
         System.out.println(new SubArraySum().checkSubarraySum(new int[]{1,1}, 2)==true);  // edge case
         System.out.println(new SubArraySum().checkSubarraySum(new int[]{7,1,3}, 4)==true);
         
-        System.out.println(new SubArraySum().checkSubarraySum(new int[]{24, 2, 6, 5, 6}, 6));
+        System.out.println(new SubArraySum().checkSubarraySum(new int[]{24, 2, 6, 5, 6}, 6)==false);  // new test case
     }
 }
