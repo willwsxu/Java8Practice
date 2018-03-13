@@ -10,25 +10,36 @@ public class LargestDivisibleSubset {
     static public List<Integer> largestDivisibleSubset(int[] nums) {
         List<Integer> ans=new ArrayList<>();
     	if (nums.length==0)
-    		return ans;
+            return ans;
         Arrays.sort(nums);
-        int count[]=new int[nums.length];
+        int count[]=new int[nums.length];  // count of a valid subset including at this pos
         Arrays.fill(count, 1);
-        int maxpos=0;
+        int parent[]=new int[nums.length]; // maintain a link of previous item in the subset
+        Arrays.fill(parent, -1);
+        int maxpos=0;  // keep track of location and count of max subset
         int maxCount=0;
         for (int i=1; i<nums.length; i++) {
         	for (int j=i-1; j>=0; j--) {
         		if (nums[i]%nums[j]==0) {
-        			count[i]=Integer.max(count[i], 1+count[j]);
+                            if ( count[i] < 1+count[j] ) {
+        			count[i]=1+count[j];
+                                parent[i]=j;
         			if (maxCount<count[i]) {
         				maxCount=count[i];
         				maxpos=i;
         			}
+                            }
         		}
         	}
         }
         //System.out.println("max pos="+maxpos);
-        ans.add(nums[maxpos]);
+        //System.out.println(Arrays.toString(nums));
+        //System.out.println(Arrays.toString(parent));
+        do {
+            ans.add(nums[maxpos]);
+            maxpos=parent[maxpos];
+        } while (maxpos>=0);
+        /*
         int val=nums[maxpos];
         maxCount--;
         for (int j=maxpos-1; j>=0; j--) {
@@ -37,7 +48,7 @@ public class LargestDivisibleSubset {
         		ans.add(val);
         		maxCount--;
         	}
-        }
+        }*/
         return ans;
     }
 
