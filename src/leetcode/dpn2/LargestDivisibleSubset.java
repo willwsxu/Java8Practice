@@ -1,4 +1,4 @@
-package leetcode.dynamicprog;
+package leetcode.dpn2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,7 +7,7 @@ import java.util.List;
 // Given a set of distinct positive integers, find the largest subset such that 
 // every pair (Si, Sj) of elements in this subset satisfies: Si % Sj = 0 or Sj % Si = 0
 public class LargestDivisibleSubset {
-    static public List<Integer> largestDivisibleSubset(int[] nums) {
+    static public List<Integer> largestDivisibleSubset(int[] nums) { // O(n^2)
         List<Integer> ans=new ArrayList<>();
     	if (nums.length==0)
             return ans;
@@ -39,16 +39,6 @@ public class LargestDivisibleSubset {
             ans.add(nums[maxpos]);
             maxpos=parent[maxpos];
         } while (maxpos>=0);
-        /*
-        int val=nums[maxpos];
-        maxCount--;
-        for (int j=maxpos-1; j>=0; j--) {
-        	if (val%nums[j]==0 && count[j]==maxCount) {
-        		val=nums[j];
-        		ans.add(val);
-        		maxCount--;
-        	}
-        }*/
         return ans;
     }
 

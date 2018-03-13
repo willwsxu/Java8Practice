@@ -1,7 +1,7 @@
 /*
  * Given an unsorted array of integers, find the length of longest increasing subsequence
  */
-package leetcode.dynamicprog;
+package leetcode.dpn2;
 
 import java.util.Arrays;
 
