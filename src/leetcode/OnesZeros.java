@@ -7,7 +7,9 @@ import java.util.Arrays;
 
 public class OnesZeros {
     int dp[][][];
-    int findMaxForm(String[] strs, int idx, int zeroes, int ones) {
+    int ones[];
+    int zeroes[];
+    private int findMaxForm(String[] strs, int idx, int zeroes, int ones) {
         if (zeroes<0 ||ones<0)
             return Integer.MIN_VALUE;
         if (idx==strs.length)
@@ -15,15 +17,15 @@ public class OnesZeros {
         if (dp[idx][zeroes][ones]>=0)
             return dp[idx][zeroes][ones];
         int notake=findMaxForm(strs, idx+1, zeroes, ones);
-        int new1=ones;
+        /*int new1=ones;
         int new0=zeroes;
         for (int i=0; i<strs[idx].length(); i++) {
             if (strs[idx].charAt(i)=='1')
                 new1--;
             else
                 new0--;
-        }
-        int take=1+findMaxForm(strs, idx+1, new0, new1);
+        }*/
+        int take=1+findMaxForm(strs, idx+1, zeroes-this.zeroes[idx], ones-this.ones[idx]);
         dp[idx][zeroes][ones] = Integer.max(take, notake);
         return dp[idx][zeroes][ones];
     }
@@ -32,6 +34,16 @@ public class OnesZeros {
         for (int[][] rc: dp)
             for (int[] r: rc)
                 Arrays.fill(r, -1);
+        ones=new int[strs.length];
+        zeroes=new int[strs.length];
+        for (int i=0; i<strs.length; i++) {
+            for (int j=0; j<strs[i].length(); j++) {
+                if (strs[i].charAt(j)=='1')
+                    ones[i]++;
+                else
+                    zeroes[i]++;
+            }            
+        }
         return findMaxForm(strs, 0, m, n);
     }
     
