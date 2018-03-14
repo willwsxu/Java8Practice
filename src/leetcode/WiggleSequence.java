@@ -4,16 +4,24 @@
 package leetcode;
 
 public class WiggleSequence {
-    
-    static private int wiggle(int[] nums, boolean up) 
-    {
+    static public int wiggleMaxLength(int[] nums) {  // beat 100%
+        if (nums.length<2)
+            return nums.length;
+        int i=1;
+        for (; i<nums.length; i++) {
+            if (nums[i]!=nums[i-1])
+                break;
+        }
+        if (i==nums.length)
+            return 1;
+        boolean up=nums[i]>nums[i-1];  // greedy method, find direction of first 2 numbers
         int count1=1;
-        for (int i=1; i<nums.length; i++) {
+        for (; i<nums.length; i++) {
             if (up) {
-                if (nums[i]>nums[i-1]) {
-                    up=false;
+                if (nums[i]>nums[i-1]) {  // compare to last number
+                    up=false;  // flip direction
                     count1++;
-                }
+                }  // else number is smaller, use it for next compare
             } else {
                 if (nums[i]<nums[i-1]) {
                     up=true;
@@ -21,14 +29,7 @@ public class WiggleSequence {
                 }            
             }
         }
-        return count1;        
-    }
-    static public int wiggleMaxLength(int[] nums) {
-        if (nums.length<2)
-            return nums.length;
-        int count1=wiggle(nums, true); // first two numbers goes up
-        int count2=wiggle(nums, false);
-        return Integer.max(count1, count2);
+        return count1;
     }
     
     public static void main(String[] args)
