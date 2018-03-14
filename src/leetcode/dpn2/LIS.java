@@ -25,6 +25,7 @@ public class LIS {
         return ans;
     }
     
+    //Given an unsorted array of integers, find the number of longest increasing subsequenc
     static public int findNumberOfLIS(int[] nums) {
         int ans=1;
         int maxLen=1;

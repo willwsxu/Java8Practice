@@ -3,6 +3,12 @@
  */
 package leetcode.dpn2;
 
+ class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode(int x) { val = x; }
+ }
 public class BST {
     static public int numTrees(int n) { // beat 100%
         int dp[]=new int[n+1];
