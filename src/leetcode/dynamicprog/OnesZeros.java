@@ -1,7 +1,7 @@
 /*
  * Given array of strings, find the maximum number of strings that you can form with given m 0s and n 1s
  */
-package leetcode;
+package leetcode.dynamicprog;
 
 import java.util.Arrays;
 
@@ -17,14 +17,6 @@ public class OnesZeros {
         if (dp[idx][zeroes][ones]>=0)
             return dp[idx][zeroes][ones];
         int notake=findMaxForm(strs, idx+1, zeroes, ones);
-        /*int new1=ones;
-        int new0=zeroes;
-        for (int i=0; i<strs[idx].length(); i++) {
-            if (strs[idx].charAt(i)=='1')
-                new1--;
-            else
-                new0--;
-        }*/
         int take=1+findMaxForm(strs, idx+1, zeroes-this.zeroes[idx], ones-this.ones[idx]);
         dp[idx][zeroes][ones] = Integer.max(take, notake);
         return dp[idx][zeroes][ones];
