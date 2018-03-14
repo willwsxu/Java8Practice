@@ -41,16 +41,21 @@ public class IsSubSequence {
         }
         return false;
     }
-    public boolean isSubsequence(String s, String t) {
+    public boolean isSubsequence(String s, String t) {  // beat 87%
+        if (s.isEmpty())
+            return true;
         int j=0;
-        for (int i=0; i<t.length(); i++) {
-            if (j==s.length())
-                return true;
-            if (s.charAt(j)==t.charAt(i)) {
+        char target=s.charAt(j);
+        int n=t.length();
+        for (int i=0; i<n; i++) {
+            if (target==t.charAt(i)) {
                 j++;
+                if (j==s.length())
+                    return true;
+                target=s.charAt(j);
             }
         }
-        return j==s.length();
+        return false;
     }
     
     public static void main(String[] args)
