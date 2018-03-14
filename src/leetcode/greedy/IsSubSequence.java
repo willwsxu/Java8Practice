@@ -1,7 +1,7 @@
 /*
  * Given a string s and a string t, check if s is subsequence of t
  */
-package leetcode;
+package leetcode.greedy;
 
 import java.util.Arrays;
 
@@ -22,12 +22,12 @@ public class IsSubSequence {
                 if (ans) {
                     dp[i][j]=1;
                     return true;
-                }
+                }                
             }
         dp[i][j]=0;
         return false;
     }
-    public boolean isSubsequence(String s, String t) {
+    public boolean isSubsequence_v1(String s, String t) { // TLE
         if (s.isEmpty())
             return true;
         if (t.isEmpty())
@@ -40,6 +40,17 @@ public class IsSubSequence {
                 return true;
         }
         return false;
+    }
+    public boolean isSubsequence(String s, String t) {
+        int j=0;
+        for (int i=0; i<t.length(); i++) {
+            if (j==s.length())
+                return true;
+            if (s.charAt(j)==t.charAt(i)) {
+                j++;
+            }
+        }
+        return j==s.length();
     }
     
     public static void main(String[] args)

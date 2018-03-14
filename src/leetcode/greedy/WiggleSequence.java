@@ -1,7 +1,7 @@
 /*
  * A sequence of numbers is called a wiggle sequence if the differences between successive numbers strictly alternate between positive and negative
  */
-package leetcode;
+package leetcode.greedy;
 
 public class WiggleSequence {
     static public int wiggleMaxLength(int[] nums) {  // beat 100%
