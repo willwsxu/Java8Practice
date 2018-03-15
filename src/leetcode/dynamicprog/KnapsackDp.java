@@ -21,7 +21,7 @@ public class KnapsackDp {
         dp[idx][zeroes][ones] = Integer.max(take, notake);
         return dp[idx][zeroes][ones];
     }
-    public int findMaxForm_topdown(String[] strs, int m, int n) { // topdown dp
+    public int findMaxForm_topdown(String[] strs, int m, int n) { // topdown dp, beat 40%
         dp=new int[strs.length][m+1][n+1];
         for (int[][] rc: dp)
             for (int[] r: rc)
@@ -39,22 +39,26 @@ public class KnapsackDp {
         return findMaxForm(strs, 0, m, n);
     }
 
-    public int findMaxForm(String[] strs, int m, int n) { // bottom up
-        dp=new int[strs.length][m+1][n+1];
-        for (int[][] rc: dp)
-            for (int[] r: rc)
-                Arrays.fill(r, -1);
-        ones=new int[strs.length];
-        zeroes=new int[strs.length];
+    public int findMaxForm(String[] strs, int m, int n) { // bottom up beat 80%
+        int memo[][]=new int[m+1][n+1];
+        for (int[] r: memo)
+            Arrays.fill(r, 0);
         for (int i=0; i<strs.length; i++) {
+        	int ones=0;
+        	int zero=0;
             for (int j=0; j<strs[i].length(); j++) {
                 if (strs[i].charAt(j)=='1')
-                    ones[i]++;
+                    ones++;
                 else
-                    zeroes[i]++;
-            }            
+                	zero++;
+            }
+            for (int j=m; j>=zero; j--) {
+            	for (int k=n; k>=ones; k--) {
+            		memo[j][k]=Integer.max(memo[j][k], 1+memo[j-zero][k-ones]);
+            	}
+            }
         }
-        return findMaxForm(strs, 0, m, n);
+        return memo[m][n];
     }
     public static void main(String[] args)
     {
