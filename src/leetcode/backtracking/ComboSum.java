@@ -84,6 +84,26 @@ public class ComboSum {
         combinationSum3(k,n,combo,ans,count+1);
     }
   
+    // Given an integer array with all positive numbers and no duplicates, 
+    // find the number of possible combinations that add up to a positive integer target.
+    int dp[];
+    private int combinationSum4Dp(int[] nums, int target) {
+    	if (dp[target]>=0)
+    		return dp[target];
+    	int total=0;
+    	for (int i=0; i<nums.length; i++) {
+    		if (nums[i]<=target)
+    			total += combinationSum4Dp(nums, target-nums[i]);
+    	}
+    	dp[target] = total;
+    	return total;
+    }
+    public int combinationSum4(int[] nums, int target) { // beat 100%
+    	dp=new int[target+1];
+    	Arrays.fill(dp, -1);
+    	dp[0]=1;
+    	return combinationSum4Dp(nums, target);
+    }
     public static void main(String[] args)
     {
         //List<List<Integer>> ans=new ComboSum().combinationSum(new int[]{2,3,6,7}, 7);
@@ -96,5 +116,7 @@ public class ComboSum {
         //List<List<Integer>> ans=new ComboSum().combinationSum3(2,18);
         for (List<Integer> li: ans)
             System.out.println(li);
+        
+        System.out.println(new ComboSum().combinationSum4(new int[] {1, 2, 3}, 4));
     }
 }
