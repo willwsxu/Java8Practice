@@ -60,9 +60,30 @@ public class KnapsackDp {
         }
         return memo[m][n];
     }
+    
+    // target sum, 
+    // You are given a list of non-negative integers, a1, a2, ..., an, and a target, S. 
+    // Now you have 2 symbols + and -. For each integer, you should choose one from + and - 
+    // as its new symbol. 
+    // Find out how many ways to assign symbols to make sum of integers equal to target S.
+    int findTargetSumWays(int[] nums, int idx,  int S) {
+        if (idx==nums.length) {
+        	return S==0?1:0;
+        }
+        int count=0;
+        count += findTargetSumWays(nums, idx+1, S-nums[idx]);
+        count += findTargetSumWays(nums, idx+1, S+nums[idx]);
+        return count;
+    }
+    public int findTargetSumWays(int[] nums, int S) {
+        return findTargetSumWays(nums, 0, S);
+    }
+    
     public static void main(String[] args)
     {
         System.out.println(new KnapsackDp().findMaxForm(new String[]{"10", "0", "1"}, 1,1)==2);
         System.out.println(new KnapsackDp().findMaxForm(new String[]{"10", "0001", "111001", "1", "0"}, 5,3)==4);
+        
+        System.out.println(new KnapsackDp().findTargetSumWays(new int[]{1, 1, 1, 1, 1}, 3));
     }
 }
