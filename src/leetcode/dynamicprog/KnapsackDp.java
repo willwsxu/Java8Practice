@@ -93,8 +93,8 @@ public class KnapsackDp {
     	for (int[]r: memo)
     		Arrays.fill(r, -1);
         int ans= findTargetSumWays(nums, 0, 0);
-        for (int []r : memo)
-        	System.out.println(Arrays.toString(r));
+        //for (int []r : memo)
+        //	System.out.println(Arrays.toString(r));
         return ans;
     }
     
@@ -104,6 +104,6 @@ public class KnapsackDp {
         System.out.println(new KnapsackDp().findMaxForm(new String[]{"10", "0001", "111001", "1", "0"}, 5,3)==4);
         
         System.out.println(new KnapsackDp().findTargetSumWays(new int[]{1, 1, 1, 1, 1}, 3)==5);
-        System.out.println(new KnapsackDp().findTargetSumWays(new int[]{1, 0}, 1));
+        System.out.println(new KnapsackDp().findTargetSumWays(new int[]{1, 0}, 1)==2);
     }
 }
