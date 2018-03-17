@@ -66,17 +66,36 @@ public class KnapsackDp {
     // Now you have 2 symbols + and -. For each integer, you should choose one from + and - 
     // as its new symbol. 
     // Find out how many ways to assign symbols to make sum of integers equal to target S.
+    int memo[][];
+    int sum=0;
+    int target;
     int findTargetSumWays(int[] nums, int idx,  int S) {
         if (idx==nums.length) {
-        	return S==0?1:0;
+        	return S==target?1:0;
         }
+        if (memo[idx][S+sum]>=0)
+        	return memo[idx][S+sum];
         int count=0;
         count += findTargetSumWays(nums, idx+1, S-nums[idx]);
         count += findTargetSumWays(nums, idx+1, S+nums[idx]);
+        memo[idx][S+sum]=count;
         return count;
     }
     public int findTargetSumWays(int[] nums, int S) {
-        return findTargetSumWays(nums, 0, S);
+    	for (int v: nums)
+    		sum +=v;
+    	if (S<-sum || S>sum)
+    		return 0;
+    	//if (S==sum || S==-sum)
+    	//	return 1;
+    	target=S;
+    	memo=new int[nums.length][2*sum+1]; // [-sum,sum]
+    	for (int[]r: memo)
+    		Arrays.fill(r, -1);
+        int ans= findTargetSumWays(nums, 0, 0);
+        for (int []r : memo)
+        	System.out.println(Arrays.toString(r));
+        return ans;
     }
     
     public static void main(String[] args)
@@ -84,6 +103,7 @@ public class KnapsackDp {
         System.out.println(new KnapsackDp().findMaxForm(new String[]{"10", "0", "1"}, 1,1)==2);
         System.out.println(new KnapsackDp().findMaxForm(new String[]{"10", "0001", "111001", "1", "0"}, 5,3)==4);
         
-        System.out.println(new KnapsackDp().findTargetSumWays(new int[]{1, 1, 1, 1, 1}, 3));
+        System.out.println(new KnapsackDp().findTargetSumWays(new int[]{1, 1, 1, 1, 1}, 3)==5);
+        System.out.println(new KnapsackDp().findTargetSumWays(new int[]{1, 0}, 1));
     }
 }
