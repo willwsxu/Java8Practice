@@ -23,7 +23,7 @@ public class ArithmeticSlices {
     
     public static void main(String[] args)
     {
-        System.out.println(numberOfArithmeticSlices(new int[]{1, 2, 3, 4}));
-        System.out.println(numberOfArithmeticSlices(new int[]{1, 2, 3, 5}));
+        System.out.println(numberOfArithmeticSlices(new int[]{1, 2, 3, 4})==3);
+        System.out.println(numberOfArithmeticSlices(new int[]{1, 2, 3, 5})==1);
     }
 }
