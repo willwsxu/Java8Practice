@@ -20,11 +20,21 @@ public class TrianglePath {
         dp[level][pos] = triangle.get(level).get(pos)+Integer.min(left, right);
         return dp[level][pos];
     }
-    public int minimumTotal(List<List<Integer>> triangle) {
+    public int minimumTotal_topdown(List<List<Integer>> triangle) {
         dp=new int[triangle.size()][triangle.size()];
         for (int[] r: dp)
             Arrays.fill(r, Integer.MIN_VALUE);
         return minimumTotal(triangle, 0, 0);
+    }
+    public int minimumTotal(List<List<Integer>> triangle) { // bottom up, slower than top down
+        int memo[]=new int[triangle.size()];
+        Arrays.fill(memo, 0);
+        for (int i=triangle.size()-1; i>0; i--) {
+            for (int j=0; j<i; j++) {
+                memo[j]=Integer.min(memo[j]+triangle.get(i).get(j), memo[j+1]+triangle.get(i).get(j+1));
+            }
+        }
+        return memo[0]+triangle.get(0).get(0);
     }
     public static void main(String[] args)
     {
