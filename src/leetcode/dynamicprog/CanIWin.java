@@ -43,6 +43,22 @@ public class CanIWin {
     	return canIWin(maxChoosableInteger, 0, 0, desiredTotal);
     }
 
+    // Given an array of scores that are non-negative integers. Player 1 picks one of the numbers 
+    // from either end of the array followed by the player 2 and then player 1 and so on
+    // predict whether player 1 is the winner.
+    // 1 <= length of the array <= 20. 
+    // Any scores in the given array are non-negative integers and will not exceed 10,000,000.
+    // If the scores of both players are equal, then player 1 is still the winner.
+    int PredictTheWinner(int[] nums, int begin, int end) {
+        if (begin==end)
+        	return nums[begin];
+        int pick1=nums[begin]-PredictTheWinner(nums, begin+1, end);
+        int pick2=nums[end]-PredictTheWinner(nums, begin, end-1);
+        return Integer.max(pick1, pick2);
+    }
+    public boolean PredictTheWinner(int[] nums) {
+        return PredictTheWinner(nums, 0, nums.length-1)>=0;
+    }
     public static void main(String[] args)
     {
     	System.out.println(new CanIWin().canIWin(10, 11)==false);
@@ -51,5 +67,9 @@ public class CanIWin {
     	System.out.println(new CanIWin().canIWin(3, 6)==true);
     	System.out.println(new CanIWin().canIWin(10, 0)==true);
     	System.out.println(new CanIWin().canIWin(10, 1)==true);
+    	
+    	System.out.println(new CanIWin().PredictTheWinner(new int[] {1,5,2})==false);
+    	System.out.println(new CanIWin().PredictTheWinner(new int[] {1, 5, 233, 7})==true);
+    	System.out.println(new CanIWin().PredictTheWinner(new int[] {0})==true);
     }
 }
