@@ -10,7 +10,7 @@ public class CanIWin {
 	int fullmask;
 	int dp[];
     public boolean canIWin(int maxChoosableInteger, int mask, int total, int desiredTotal) {
-    	if (total>=desiredTotal || mask==fullmask)
+    	if (total>=desiredTotal || mask==fullmask) // not allowed to pick any number
     		return false;
     	if (dp[mask]>=0)
     		return dp[mask]>0;
@@ -33,8 +33,8 @@ public class CanIWin {
     	if (sumAll<desiredTotal)
     		return false;
     	if (sumAll==desiredTotal)
-    		return maxChoosableInteger%2>0;
-		if (desiredTotal<1)
+    		return maxChoosableInteger%2>0; // odd wins
+		if (desiredTotal<maxChoosableInteger)  // win with 1 move
 			return true;
 		
     	fullmask=(1<<maxChoosableInteger)-1;
