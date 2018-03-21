@@ -71,12 +71,14 @@ public class EqualSubsetSum {
         Arrays.fill(dp, false);  // any sum for  no number
         dp[0]=true;
         for (int num : nums) {
-            for (int j=sum; j>0; j--) {  // backwards so new dp is not affect previous values
+            if (sum>=num)
+                dp[sum] = dp[sum] || dp[sum-num];
+            if (dp[sum])  // skip rest of numbers
+                return true;
+            for (int j=sum-1; j>0; j--) {  // backwards so new dp is not affect previous values
                 if (j>=num) // take ith nums, or not take
                     dp[j] = dp[j] || dp[j-num];
             }
-            if (dp[sum])  // skip rest of numbers
-                return true;
         }
         return dp[sum];
     }
@@ -84,5 +86,6 @@ public class EqualSubsetSum {
     {
         System.out.println(new EqualSubsetSum().canPartition(new int[]{1, 5, 11, 5})==true);
         System.out.println(new EqualSubsetSum().canPartition(new int[]{1,2,3,5})==false);
+        System.out.println(new EqualSubsetSum().canPartition(new int[]{1,2,5})==false);
     }
 }
