@@ -25,26 +25,28 @@ public class WrapAroundSubstr {
         return ans.size();
     }
 
+    // abc has 6 substrings
+    // zabc will have additional 4, zabc, zab, za, z, which is the len of zabc
     static public int findSubstringInWraproundString(String p) {
     	int count[]=new int[26]; // max len of substring starting from a to z
     	Arrays.fill(count, 0);
-        int start=0; // continueous substring
-        for (int i=0; i<p.length(); i++) {
-        	if (i-start>=1) {
-        		if ((26+p.charAt(i)-p.charAt(i-1))%26!=1) { // start of new substring
-        			int idx=p.charAt(start)-'a';
-        			count[idx] = Integer.max(count[idx], i-start);
-        			start=i;
-        		}
-        	}
-        }
         if (!p.isEmpty()) {
-        	int idx=p.charAt(start)-'a';
-        	count[idx] = Integer.max(count[idx], p.length()-start);
+        	int idx=p.charAt(0)-'a';
+        	count[idx] = 1;
+        }
+        int len=1; // continueous substring
+        for (int i=1; i<p.length(); i++) {
+            if ((26+p.charAt(i)-p.charAt(i-1))%26!=1) { // start of new substring
+                len=1;
+            } else {
+                ++len;
+            }
+            int idx=p.charAt(i)-'a';
+            count[idx] = Integer.max(count[idx], len); // find max len of substring ends at i
         }
         int sum=0;
         for (int n: count)
-        	sum += n*(n+1)/2;
+        	sum += n;
         //System.out.println(Arrays.toString(count));
         return sum;
     }
@@ -52,7 +54,7 @@ public class WrapAroundSubstr {
     {
     	System.out.println(findSubstringInWraproundString("a")==1);
     	System.out.println(findSubstringInWraproundString("")==0);
-    	System.out.println(findSubstringInWraproundString("cac"));
-    	System.out.println(findSubstringInWraproundString("zab"));
+    	System.out.println(findSubstringInWraproundString("cac")==2);
+    	System.out.println(findSubstringInWraproundString("zab")==6);
     }
 }
