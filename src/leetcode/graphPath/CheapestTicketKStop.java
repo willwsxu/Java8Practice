@@ -16,11 +16,11 @@ public class CheapestTicketKStop {
     	for (int[] f: flights) {
     		adjList.get(f[0]).add(f);
     	}
-    	nodes.add(src); // city
+    	nodes.add(src); // bfs, add src city
     	int stops=0;
         int ans[] = new int[n];
         Arrays.fill(ans, Integer.MAX_VALUE/2);
-        ans[src]=0;
+        ans[src]=0;  // ensure each step, price is computed one city away from src
         boolean added[]=new boolean[n];
     	while (!nodes.isEmpty() && stops<=K) {
             int lastSize=nodes.size();
@@ -34,7 +34,6 @@ public class CheapestTicketKStop {
                     if (f[1]==dst) {
                         continue;
                     }
-                    //System.out.println(head[0]+" add "+f[1]+": size="+nodes.size()+" stops "+stops);
                     if ( !added[f[1]]) {
                         nodes.add(f[1]);
                         added[f[1]]=true;
