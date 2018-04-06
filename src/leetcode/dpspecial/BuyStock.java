@@ -37,7 +37,7 @@ public class BuyStock {
     }
     
     //Design an algorithm to find the maximum profit. You may complete at most two transactions
-    int getMax(int[] diff, int start, int end) {
+    int getMax(int[] diff, int start, int end) { // too slow to call it each time. see below
         int sum1=0;
         int max1=0;
         for (int i=start; i<end; i++) {
@@ -57,19 +57,39 @@ public class BuyStock {
         }
         return Integer.max(max1, max2);*/
     }
-    public int maxProfit(int[] prices) {
+    public int maxProfit(int[] prices) { //O(n) beat 84%
         int n=prices.length-1;
         if (n<1)
             return 0;
         int diff[]=new int[n];
         for (int i=0; i<n; i++)
-            diff[i]=prices[i+1]-prices[i];
+            diff[i]=prices[i+1]-prices[i];  // create difference array
         //System.out.println(Arrays.toString(diff));
-        int ans=0;
-        for (int partition=0; partition<n; partition++) {  // partition difference array in 2 parts
-            int sum1=getMax(diff, 0, partition);
-            int sum2=getMax(diff, partition, n);
-            ans=Integer.max(ans, sum1+sum2);
+        int maxLeft[]=new int[n];  // compute max from left
+        int sum1=0;
+        int max1=0;
+        for (int i=0; i<n; i++) {
+            sum1 +=diff[i];
+            if (sum1<0)
+                sum1=0;  // start over
+            max1=Integer.max(max1, sum1);
+            maxLeft[i]=max1;
+        }
+        int maxRight[]=new int[n]; // compute max from right
+        int sum2=0;
+        int max2=0;
+        for (int i=n-1; i>=0; i--) {
+            sum2 +=diff[i];
+            if (sum2<0)
+                sum2=0;  // start over
+            max2=Integer.max(max2, sum2);
+            maxRight[i]=max2;
+        }
+        int ans=Integer.max(maxLeft[n-1], maxRight[0]);
+        for (int partition=1; partition<n; partition++) {  // partition difference array in 2 parts
+            //int sum1=getMax(diff, 0, partition);
+            //int sum2=getMax(diff, partition, n);
+            ans=Integer.max(ans, maxLeft[partition-1]+maxRight[partition]);
             //System.out.println("p="+partition+": "+sum1+" "+sum2);
         }
         return ans;
@@ -84,7 +104,7 @@ public class BuyStock {
     	System.out.println(ans==11);
         
         ans=new BuyStock().maxProfit(new int[] {2,1,4,5,2,9,7});
-    	System.out.println(ans);
+    	System.out.println(ans==11);
        
         ans=new BuyStock().maxProfit(new int[] {1});
     	System.out.println(ans==0);
