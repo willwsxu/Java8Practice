@@ -1,4 +1,4 @@
-package leetcode.dynamicprog;
+package leetcode.dpspecial;
 
 // Give stock price each day, you can buy and sell any time but cannot buy again without sell 
 // each transaction must pay a fee
