@@ -21,23 +21,21 @@ public class BuyStock {
     	}
     	return profit;
     }
-    public int maxProfit(int[] prices, int fee) {
+    public int maxProfit(int[] prices, int fee) {//beat 38%, not difference to use O(n) or O(1) memory
         //return maxProfit(prices, 0, -1, fee);
-    	int n=prices.length;
-    	int[]dpBuy=new int[n+1];
-    	int[]dpSell=new int[n+1];
-    	dpBuy[0]=Integer.MIN_VALUE/2;  // use half max to avoid overflow
-    	dpSell[0]=0;
-    	for (int i=1; i<=n; i++) {
-    		dpBuy[i] = Integer.max(dpBuy[i-1], dpSell[i-1]-prices[i-1]);
-    		dpSell[i] = Integer.max(dpSell[i-1], dpBuy[i-1]+prices[i-1]-fee);
+    	int dpBuy=Integer.MIN_VALUE/2;  // use half max to avoid overflow
+    	int dpSell=0;
+    	for (int p : prices) {
+    		int prevBuy=dpBuy;  // save it for later use
+    		dpBuy = Integer.max(dpBuy, dpSell-p);
+    		dpSell = Integer.max(dpSell, prevBuy+p-fee);
     	}
-    	return Integer.max(dpBuy[n], dpSell[n]);
+    	return Integer.max(dpBuy, dpSell);
     }
     
     public static void main(String[] args)
     {
     	int ans=new BuyStock().maxProfit(new int[] {1, 3, 2, 8, 4, 9}, 2);
-    	System.out.println(ans);
+    	System.out.println(ans==8);
     }
 }
