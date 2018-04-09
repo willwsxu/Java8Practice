@@ -1,7 +1,5 @@
 /*
  * Given an undirected graph, return true if and only if it is bipartite
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package leetcode.bfs;
 
