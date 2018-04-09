@@ -1,4 +1,4 @@
-package leetcode.graphPath;
+package leetcode.bfs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
