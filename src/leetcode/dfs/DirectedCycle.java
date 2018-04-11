@@ -3,6 +3,8 @@
  */
 package leetcode.dfs;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DirectedCycle {
@@ -12,6 +14,9 @@ public class DirectedCycle {
     int N;
     List<List<Integer>> adjList;
     
+    DirectedCycle()
+    {    	
+    }
     DirectedCycle(List<List<Integer>> adjList)
     {
         N=adjList.size();
@@ -45,5 +50,27 @@ public class DirectedCycle {
     public boolean hasCycle()
     {
         return cycle;
+    }
+    
+    //Given the total number of courses and a list of prerequisite pairs, is it possible for you to finish all courses? 
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adj= new ArrayList<>();
+        for (int i=0; i<numCourses; i++)
+            adj.add(new ArrayList<Integer>());
+        for (int req[] : prerequisites) {
+            adj.get(req[1]).add(req[0]);
+        }
+        return !new DirectedCycle(adj).hasCycle();
+    }
+    
+    public static void main(String[] args)
+    {
+    	DirectedCycle sch=new DirectedCycle();
+        System.out.println(sch.canFinish(2, new int[][]{{1,0}}));
+        sch=new DirectedCycle();
+        System.out.println(sch.canFinish(4, new int[][]{{1,0},{2,0},{3,1},{3,2}}));
+        
+        sch=new DirectedCycle();
+        System.out.println(sch.canFinish(2, new int[][]{{1,0},{0,1}})==false);
     }
 }
