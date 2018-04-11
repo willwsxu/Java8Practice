@@ -8,7 +8,7 @@ import java.util.Queue;
 
 public class GraphBipartite {
     
-    public boolean isBipartite(int[][] graph) {
+    public boolean isBipartite(int[][] graph) { // graph is adjacency list
         int color[] = new int[graph.length];  // color 1 or 2
         Queue<Integer> q=new ArrayDeque<>();
         for (int i=0; i<graph.length; i++) {  // in case graph is disconnected
