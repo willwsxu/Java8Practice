@@ -2,6 +2,7 @@ package leetcode.bfs;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 
@@ -94,6 +95,33 @@ public class Tree {
         return ans;
     }
     
+    // Given a binary tree, return the zigzag level order traversal of its nodes' values
+    // left to right, then right to left
+    static public List<List<Integer>> zigzagLevelOrder(TreeNode root) { // borrow from levelOrder
+        List<List<Integer>> ans=new ArrayList<>();
+    	if (root==null)
+    		return ans;
+        Queue<TreeNode> q=new ArrayDeque<>();
+        q.add(root);
+        boolean leftRight=true;
+        while (!q.isEmpty()) {
+        	int size=q.size();
+        	List<Integer> level = new ArrayList<>();
+        	ans.add(level);
+        	for (int i=0; i<size; i++) {
+        		TreeNode tn=q.poll();
+        		level.add(tn.val);
+        		if (tn.left!=null)
+        			q.add(tn.left);
+        		if (tn.right!=null)
+        			q.add(tn.right);        		
+        	}
+                if (!leftRight)
+                    Collections.reverse(level);
+                leftRight = !leftRight;
+        }
+        return ans;        
+    }
     public static void main(String[] args)
     {
     	TreeNode r=new TreeNode(1);
@@ -105,14 +133,19 @@ public class Tree {
     	r.right.left.left=new TreeNode(7);
     	r.right.left.right=new TreeNode(8);
     	System.out.println(findBottomLeftValue(r)==7);
-    	
+    	        
+        System.out.println(rightSideView(r));
+        System.out.println(rightSideView_recur(r));
+        
     	List<List<Integer>> ans=levelOrder(r);
     	for (List<Integer> li: ans) {
     		System.out.println(li);
     	}
     	ans=levelOrder(null);
         
-        System.out.println(rightSideView(r));
-        System.out.println(rightSideView_recur(r));
+        ans=zigzagLevelOrder(r);
+    	for (List<Integer> li: ans) {
+            System.out.println(li);
+    	}
     }
 }
