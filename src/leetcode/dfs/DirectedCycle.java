@@ -65,12 +65,9 @@ public class DirectedCycle {
     
     public static void main(String[] args)
     {
-    	DirectedCycle sch=new DirectedCycle();
-        System.out.println(sch.canFinish(2, new int[][]{{1,0}}));
-        sch=new DirectedCycle();
-        System.out.println(sch.canFinish(4, new int[][]{{1,0},{2,0},{3,1},{3,2}}));
-        
-        sch=new DirectedCycle();
-        System.out.println(sch.canFinish(2, new int[][]{{1,0},{0,1}})==false);
+		DirectedCycle sch=new DirectedCycle();
+		System.out.println(sch.canFinish(2, new int[][]{{1,0}}));		
+		System.out.println(sch.canFinish(4, new int[][]{{1,0},{2,0},{3,1},{3,2}}));		
+		System.out.println(sch.canFinish(2, new int[][]{{1,0},{0,1}})==false);
     }
 }
