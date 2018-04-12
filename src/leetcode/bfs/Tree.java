@@ -120,7 +120,7 @@ public class Tree {
                     Collections.reverse(level);
                 leftRight = !leftRight;
         }
-        return ans;        
+        return ans;
     }
     public static void main(String[] args)
     {
