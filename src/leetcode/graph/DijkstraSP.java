@@ -48,6 +48,26 @@ public class DijkstraSP {
             }
         }
     }
+    
+    public void bellmanford(int[][] times, int N, int K)
+    {
+        distTo = new int[N+1];
+        Arrays.fill(distTo, Integer.MAX_VALUE);
+        distTo[K]=0;
+        distTo[0]=0;
+        //System.out.println(Arrays.toString(distTo));
+        for (int i=0; i<N; i++) {  // repeat N times
+            for (int[]edge : times) {
+                int u=edge[0];
+                if ( distTo[u]==Integer.MAX_VALUE)  // ignore u if not valid!!!
+                    continue;
+                int v=edge[1];
+                if (distTo[u]+edge[2]<distTo[v])
+                    distTo[v] = distTo[u]+edge[2];                
+            }
+        }        
+    }
+    
     /* Given times, a list of travel times as directed edges times[i] = (u, v, w), 
      * where u is the source node, v is the target node, and w is the time it takes 
      * for a signal to travel from source to target.
@@ -55,7 +75,7 @@ public class DijkstraSP {
     */
     // 743. all vertex are 1 based, convert to 0 based
     public int networkDelayTime(int[][] times, int N, int K) {
-        List<List<int[]>> adj = new ArrayList<>(N);
+        /*List<List<int[]>> adj = new ArrayList<>(N);
         for (int i=0; i<N; i++)
             adj.add(new ArrayList<>());
         for (int[]e: times) {
@@ -63,6 +83,8 @@ public class DijkstraSP {
             adj.get(e[0]-1).add(e);
         }
         sssp(adj, K-1); // run dijkstra to get shortest distance to all nodes
+        */
+        bellmanford(times, N, K);
         int maxDist=-1;
         for (int d: distTo) {  // find the largest
             if (d == Integer.MAX_VALUE )
@@ -70,10 +92,10 @@ public class DijkstraSP {
             if (d>maxDist)
                 maxDist = d;
         }
+        //System.out.println(Arrays.toString(distTo));
         return maxDist;
     }
-    
-    
+        
     public static void main(String[] args)
     {
         int ans=new DijkstraSP().networkDelayTime(new int[][]{{1,2,1}}, 2, 2);
@@ -81,6 +103,10 @@ public class DijkstraSP {
         
         int[][]t=new int[][]{{1,2,1},{2,3,2},{1,3,4}};
         ans=new DijkstraSP().networkDelayTime(t, 3, 1);
+        System.out.println(ans==3);
+        
+        t=new int[][]{{1,2,1},{2,1,3}};
+        ans=new DijkstraSP().networkDelayTime(t, 2, 2);
         System.out.println(ans==3);
     }
 }
