@@ -1,5 +1,7 @@
 package leetcode.backtracking;
 
+import java.util.Arrays;
+
 public class Permutation {
 
 	// The set [1,2,3,…,n] contains a total of n! unique permutations.
@@ -32,7 +34,7 @@ public class Permutation {
 			perm(s.substring(0,i)+s.substring(i+1,s.length()), target+s.charAt(i), k);
 		}
 	}
-    public String getPermutation(int n, int k) {
+    public String getPermutation_bruteforce(int n, int k) {
     	StringBuilder sb=new StringBuilder();
     	for (int i=1; i<=n; i++)
     		sb.append(i);
@@ -40,13 +42,38 @@ public class Permutation {
     	//perm(n, 0,"", 0, k);
         return ans;
     }
+
+    int fact[];
+    public String getPermutation(String src, String target, int k) {
+    	int n=src.length();
+    	if (k==1 || n==1)
+    		return target+src;
+    	// if n=3, k=5 or 6, that mean we need to pick 3rd char in src, recursively call with n=2, k=5-2*fact[2]=1
+    	int lead=(k-1)/fact[n-1];     	// pick leading char( take floor ), depend what multiple k is to fact[n-1]
+    	//System.out.println(src+" "+target+" "+lead+" "+k);
+    	return getPermutation(src.substring(0, lead)+src.substring(lead+1, n), target+src.charAt(lead), k-lead*fact[n-1]);
+    }
+    public String getPermutation(int n, int k) {
+    	fact=new int[n+1];
+    	fact[0]=1;
+    	for (int i=1; i<=n; i++) // pre-claculate factorial
+    		fact[i]=i*fact[i-1];
+    	//System.out.println(Arrays.toString(fact));
+    	StringBuilder sb=new StringBuilder();
+    	for (int i=1; i<=n; i++)
+    		sb.append(i);
+    	return getPermutation(sb.toString(), "", k);
+    }
     public static void main(String[] args)
     {
+    	System.out.println(new Permutation().getPermutation(3,  1).equals("123"));
+    	System.out.println(new Permutation().getPermutation(3,  2).equals("132"));
+    	System.out.println(new Permutation().getPermutation(3,  3).equals("213"));
+    	System.out.println(new Permutation().getPermutation(3,  4).equals("231"));
     	System.out.println(new Permutation().getPermutation(3,  5).equals("312"));
+    	System.out.println(new Permutation().getPermutation(3,  6).equals("321"));
     	System.out.println(new Permutation().getPermutation(1,  1).equals("1"));
-    	//for (int i=0; i<100; i++) {
     	System.out.println(new Permutation().getPermutation(9,  199269).equals("594738216"));
     	System.out.println(new Permutation().getPermutation(9,  135401).equals("439157826"));
-    	//}
     }
 }
