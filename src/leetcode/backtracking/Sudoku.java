@@ -1,9 +1,10 @@
 
-package interviewbook;
+package leetcode.backtracking;
 
 import static java.lang.System.out;
 import java.util.Arrays;
 
+// beat 2%, slow, need improvement
 public class Sudoku {
     // mask for each row, col and square
     // each bit represent if a number exsit
@@ -16,7 +17,8 @@ public class Sudoku {
     int squareRow[]=new int[]{0, 0, 0, 3, 3, 3, 6, 6, 6};
     int squareCol[]=new int[]{0, 3, 6, 0, 3, 6, 0, 3, 6};
     Sudoku(String[] b)
-    { // a string for each row, use . for blank cell
+    { 
+        // a string for each row, use . for blank cell
         for (int i=0; i<b.length; i++) {
             for (int j=0; j<b[i].length(); j++) {
                 if (b[i].charAt(j)<='9' &&b[i].charAt(j)>='1')
@@ -27,6 +29,9 @@ public class Sudoku {
         computerRowColMasks(row_mask, col_mask);
         // initial mask of each square
         computerSquMasks(squ_mask);
+    }
+    Sudoku()
+    {        
     }
     boolean computerRowColMasks(int[] row_mask, int[] col_mask)
     {
@@ -103,12 +108,118 @@ public class Sudoku {
         }
         return -1;  // no more
     }
+    public boolean isValidSudoku(char[][] board) {  //leetcode
+        for (int i=0; i<SUDOKU_SIZE; i++) {
+            for (int j=0; j<SUDOKU_SIZE; j++) {
+                if ( board[i][j]=='.')
+                    this.board[i][j]=0;
+                else
+                    this.board[i][j]=board[i][j]-'0';
+            }
+        }
+        return isValid();
+    }
+    boolean isValid()
+    {
+        int []r_mask=new int[SUDOKU_SIZE];
+        int []c_mask=new int[SUDOKU_SIZE];
+        int []s_mask=new int[SUDOKU_SIZE];
+        if ( !computerSquMasks(s_mask))
+            return false;
+        return computerRowColMasks(r_mask, c_mask);        
+    }
+    /*
+    boolean updateBoardMasks()
+    {
+        Arrays.fill(row_mask, 0);
+        Arrays.fill(col_mask, 0);
+        Arrays.fill(squ_mask, 0);
+        if ( !computerSquMasks(squ_mask))
+            return false;
+        return computerRowColMasks(row_mask, col_mask);
+    }
+
+    boolean isValid(int val, int r, int c)
+    {
+        for (int i=0; i<SUDOKU_SIZE; i++) {
+            if (board[r][i]==val)
+                return false;
+            if (board[i][c]==val)
+                return false;
+        }
+        int s=getSquare(r,c);
+        for (int i=squareRow[s]; i<squareRow[s]+3; i++) {
+            for (int j=squareCol[s]; j<squareCol[s]+3; j++) {
+                if (board[i][j]==val)
+                    return false;
+            }
+        }
+        return true;
+    }*/
+    boolean backtracking(int pos)
+    {
+        int blank=findNextOpenCell(pos);
+        if (blank<0)
+            return true;
+        int r=blank/SUDOKU_SIZE;
+        int c=blank%SUDOKU_SIZE;
+        for (int i=1; i<=9; i++) {
+            board[r][c]=i;
+            if ( !isValid() ) {  // invalid choice
+                //out.println("Invalid backtracking: r="+r+" c="+c+" add "+i);
+                //print();                
+                board[r][c]=0;  
+                continue;
+            }
+            if ( backtracking(blank+1))
+                return true;
+            board[r][c]=0;
+        }
+        //out.println("r="+r+" c="+c+" fail");  can fail if previous choice is wrong
+        return false;
+    }
+    
+    public void solveSudoku(char[][] b) {        
+        for (int i=0; i<b.length; i++) {
+            for (int j=0; j<b[i].length; j++) {
+                if (b[i][j]<='9' && b[i][j]>='1')
+                    board[i][j]=b[i][j]-'0';
+            }
+        }
+        // calculate initial mask for each row and col
+        computerRowColMasks(row_mask, col_mask);
+        // initial mask of each square
+        computerSquMasks(squ_mask);
+        if (!backtracking(0))
+            System.out.println("no solution");       
+        for (int i=0; i<b.length; i++) {
+            for (int j=0; j<b[i].length; j++) {
+                    b[i][j]=(char)(board[i][j]+'0');
+            }
+        }
+    }
+
+    void print()
+    {
+        for (int i=0; i<SUDOKU_SIZE; i++) {
+            for (int j=0; j<SUDOKU_SIZE; j++) {
+                if( board[i][j]>0)
+                    out.print(board[i][j]);
+                else
+                    out.print(" ");
+                out.print(" | ");
+            }
+            out.println();
+        }
+    }
+    
     // from (r,c) of a cell, find the square index
     int getSquare(int r, int c)
     {
         int s=r/3; // starting value of big row of squares
         return s+c/3;
     }
+    // test code
     boolean isCellValid(int val, int r, int c)
     {
         int bitmask=1<<(val-1);
@@ -129,6 +240,17 @@ public class Sudoku {
         int s=getSquare(r,c);
         out.println("Squ mask "+s+":"+Integer.toBinaryString(squ_mask[c]));
     }
+    
+    boolean isBoardValid()
+    {
+        int []r_mask=new int[SUDOKU_SIZE];
+        int []c_mask=new int[SUDOKU_SIZE];
+        int []s_mask=new int[SUDOKU_SIZE];
+        if ( !computerSquMasks(s_mask))
+            return false;
+        return computerRowColMasks(r_mask, c_mask);
+    }
+    
     void setMasks(int val, int r, int c)
     {
         int bitmask=1<<(val-1);
@@ -149,77 +271,6 @@ public class Sudoku {
         col_mask[c] &= bitmask;
         squ_mask[s] &= bitmask;
         //out.println("mask after : "+Integer.toBinaryString(row_mask[r])+", "+Integer.toBinaryString(col_mask[c])+", "+Integer.toBinaryString(squ_mask[s]));
-    }
-    boolean isBoardValid()
-    {
-        int []r_mask=new int[SUDOKU_SIZE];
-        int []c_mask=new int[SUDOKU_SIZE];
-        int []s_mask=new int[SUDOKU_SIZE];
-        if ( !computerSquMasks(s_mask))
-            return false;
-        return computerRowColMasks(r_mask, c_mask);
-    }
-    
-    public boolean isValidSudoku(char[][] board) {  //leetcode
-        for (int i=0; i<SUDOKU_SIZE; i++) {
-            for (int j=0; j<SUDOKU_SIZE; j++) {
-                if ( board[i][j]=='.')
-                    this.board[i][j]=0;
-                else
-                    this.board[i][j]=board[i][j]-'0';
-            }
-        }
-        int []r_mask=new int[SUDOKU_SIZE];
-        int []c_mask=new int[SUDOKU_SIZE];
-        int []s_mask=new int[SUDOKU_SIZE];
-        if ( !computerSquMasks(s_mask))
-            return false;
-        return computerRowColMasks(r_mask, c_mask);
-        
-    }
-    boolean updateBoardMasks()
-    {
-        Arrays.fill(row_mask, 0);
-        Arrays.fill(col_mask, 0);
-        Arrays.fill(squ_mask, 0);
-        if ( !computerSquMasks(squ_mask))
-            return false;
-        return computerRowColMasks(row_mask, col_mask);
-    }
-    boolean backtracking(int pos)
-    {
-        int blank=findNextOpenCell(pos);
-        if (blank<0)
-            return true;
-        int r=blank/SUDOKU_SIZE;
-        int c=blank%SUDOKU_SIZE;
-        for (int i=1; i<=9; i++) {
-            board[r][c]=i;
-            if ( !updateBoardMasks() ) {  // invalid choice
-                //out.println("Invalid backtracking: r="+r+" c="+c);
-                //print();
-                board[r][c]=0; // still want to know why this line is needed
-                continue;
-            }
-            if ( backtracking(blank+1))
-                return true;
-            board[r][c]=0;
-        }
-        //out.println("r="+r+" c="+c+" fail");  can fail if previous choice is wrong
-        return false;
-    }
-    void print()
-    {
-        for (int i=0; i<SUDOKU_SIZE; i++) {
-            for (int j=0; j<SUDOKU_SIZE; j++) {
-                if( board[i][j]>0)
-                    out.print(board[i][j]);
-                else
-                    out.print(" ");
-                out.print(" | ");
-            }
-            out.println();
-        }
     }
     static void unittest()
     {
@@ -276,6 +327,7 @@ public class Sudoku {
         sudo.print();
         
     }
+
     static void test()
     {        
         String[] puzzle=new String[]{
@@ -313,6 +365,19 @@ public class Sudoku {
     }
     public static void main(String[] args)
     {
-        test();
+        char[][] puzzle=new char[][]{
+            {'5','3','.','.','7','.','.','.','.'},
+            {'6','.','.','1','9','5','.','.','.'},
+            {'.','9','8','.','.','.','.','6','.'},
+            {'8','.','.','.','6','.','.','.','3'},
+            {'4','.','.','8','.','3','.','.','1'},
+            {'7','.','.','.','2','.','.','.','6'},
+            {'.','6','.','.','.','.','2','8','.'},
+            {'.','.','.','4','1','9','.','.','5'},
+            {'.','.','.','.','8','.','.','7','9'}
+        };
+        new Sudoku().solveSudoku(puzzle);
+        for (char r[]: puzzle)
+            System.out.println(Arrays.toString(r));
     }
 }
