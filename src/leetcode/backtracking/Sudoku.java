@@ -108,6 +108,29 @@ public class Sudoku {
         }
         return -1;  // no more
     }
+    public boolean isValidSudoku2(char[][] board) {  //leetcode beat 90%,not any faster than isValidSudoku
+        int []r_mask=new int[SUDOKU_SIZE];
+        int []c_mask=new int[SUDOKU_SIZE];
+        int []s_mask=new int[SUDOKU_SIZE];
+        for (int i=0; i<SUDOKU_SIZE; i++) {
+            for (int j=0; j<SUDOKU_SIZE; j++) {
+                if ( board[i][j]=='.')
+                    continue;
+                int mask=1<<(board[i][j]-'1');
+                if ((r_mask[i]& mask)>0)
+                	return false;
+                r_mask[i] |= mask;
+                if ((c_mask[j]& mask)>0)
+                	return false;
+                c_mask[j] |= mask;
+                int s=i/3*3+j/3;
+                if ((s_mask[s]&mask)>0)
+                	return false;
+                s_mask[s] |= mask;
+            }
+        }
+        return true;
+    }
     public boolean isValidSudoku(char[][] board) {  //leetcode
         for (int i=0; i<SUDOKU_SIZE; i++) {
             for (int j=0; j<SUDOKU_SIZE; j++) {
