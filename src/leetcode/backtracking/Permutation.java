@@ -40,8 +40,14 @@ public class Permutation {
         	if (nums[i]<nums[i+1]) { // e.g. 3,1,4,2, i=1 find first position whose value is smaller than next one
         		Arrays.sort(nums, i+1, nums.length);  // sort from i=2: 3,1,2,4
         		int next=Arrays.binarySearch(nums, i+1, nums.length, nums[i]+1); //find next where nums[next]>= nums[i]+1, next=-3
-        		if (next<0)  // i.e. find upperbound
+        		//System.out.println(i);
+        		//System.out.println(next);
+        		if (next<0)  // upperbound
         			next=(-next)-1;
+        		else {  // find lowerbound if next num has duplicate value, wish Java has lowerbound and upperbound
+        			while (nums[next]==nums[next-1])
+        				next--;
+        		}
         		// swap i with next larger value from i+1
         		nums[i] = nums[i]^nums[next];
         		nums[next] = nums[i]^nums[next];
@@ -119,16 +125,19 @@ public class Permutation {
     	int[] nums=new int[] {3,1,4,2};
     	new Permutation().nextPermutation(nums);
     	System.out.println(Arrays.toString(nums));
-    	nums=new int[] {2,3,1};
-    	new Permutation().nextPermutation(nums);
-    	System.out.println(Arrays.toString(nums));
-    	nums=new int[] {1,5,1};
-    	new Permutation().nextPermutation(nums);
-    	System.out.println(Arrays.toString(nums));
-    	nums=new int[] {2,2,7,5,4,3,2,2,1};
-    	new Permutation().nextPermutation(nums);
-    	System.out.println(Arrays.toString(nums));
     	nums=new int[] {3,2,1};
+    	new Permutation().nextPermutation(nums);
+    	System.out.println(Arrays.toString(nums));
+    	nums=new int[] {2,3,1};   // binary search to find next value
+    	new Permutation().nextPermutation(nums);
+    	System.out.println(Arrays.toString(nums));
+    	nums=new int[] {1,5,1};  // next value must be larger
+    	new Permutation().nextPermutation(nums);
+    	System.out.println(Arrays.toString(nums));
+    	nums=new int[] {2,2,7,5,4,3,2,2,1};  // java has no upper bound method, search nums[i]+1
+    	new Permutation().nextPermutation(nums);
+    	System.out.println(Arrays.toString(nums));
+    	nums=new int[] {2,1,2,2,2,2,2,1};
     	new Permutation().nextPermutation(nums);
     	System.out.println(Arrays.toString(nums));
     }
