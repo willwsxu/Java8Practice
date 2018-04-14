@@ -34,6 +34,23 @@ public class Permutation {
     	perm(nums,0,new ArrayList<>(), 0, ans);
     	return ans;
     }
+    
+    public void nextPermutation(int[] nums) {
+        for (int i=nums.length-2; i>=0; i--) {
+        	if (nums[i]<nums[i+1]) { // e.g. 3,1,4,2, i=1 find first position whose value is smaller than next one
+        		Arrays.sort(nums, i+1, nums.length);  // sort from i=2: 3,1,2,4
+        		int next=Arrays.binarySearch(nums, i+1, nums.length, nums[i]+1); //find next where nums[next]>= nums[i]+1, next=-3
+        		if (next<0)  // i.e. find upperbound
+        			next=(-next)-1;
+        		// swap i with next larger value from i+1
+        		nums[i] = nums[i]^nums[next];
+        		nums[next] = nums[i]^nums[next];
+        		nums[i] = nums[i]^nums[next];  // 3,2,1,4
+        		return;
+        	}
+        }
+        Arrays.sort(nums);
+    }
 
 	int count=0;
 	String ans;
@@ -98,5 +115,21 @@ public class Permutation {
     	System.out.println(new Permutation().permute(new int[] {1,2,3}));
 
     	System.out.println(new Permutation().permute2(new int[] {1,1,3}));
+    	
+    	int[] nums=new int[] {3,1,4,2};
+    	new Permutation().nextPermutation(nums);
+    	System.out.println(Arrays.toString(nums));
+    	nums=new int[] {2,3,1};
+    	new Permutation().nextPermutation(nums);
+    	System.out.println(Arrays.toString(nums));
+    	nums=new int[] {1,5,1};
+    	new Permutation().nextPermutation(nums);
+    	System.out.println(Arrays.toString(nums));
+    	nums=new int[] {2,2,7,5,4,3,2,2,1};
+    	new Permutation().nextPermutation(nums);
+    	System.out.println(Arrays.toString(nums));
+    	nums=new int[] {3,2,1};
+    	new Permutation().nextPermutation(nums);
+    	System.out.println(Arrays.toString(nums));
     }
 }
