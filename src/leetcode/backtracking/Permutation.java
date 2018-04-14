@@ -1,28 +1,42 @@
 package leetcode.backtracking;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class Permutation {
-
-	// The set [1,2,3,…,n] contains a total of n! unique permutations.
-	// Given n and k, return the kth permutation sequence, n is [1..9]
-	
-	int count=0;
-	String ans;
-	void perm(int n, int pos, String s, int mask, int k) {
+public class Permutation {	
+	void perm(int[] nums, int pos, List<Integer> p, int mask, List<List<Integer>> ans) {
+		int n=nums.length;
 		if (pos==n) { // pos from 0 to n-1 are valid
 			//System.out.println(s);
-			if (++count==k)
-				ans=s;
+			ans.add(new ArrayList<>(p));
 			return;
 		}
-		for (int i=1; i<=n; i++) {
-			int m=1<<(i-1);
+		for (int i=0; i<n; i++) {
+			int m=1<<i;
 			if ( (m&mask)>0 )  // digit used in previous position
 				continue;
-			perm(n, pos+1, s+i, mask|m, k);
+			p.add(nums[i]);
+			perm(nums, pos+1, p, mask|m, ans);
+			p.remove(p.size()-1);// remove last one
 		}
 	}
+    List<List<Integer>> permute(int[] nums) // beat 64%
+    {
+    	List<List<Integer>> ans=new ArrayList<>();
+    	perm(nums,0,new ArrayList<>(), 0, ans);
+    	return ans;
+    }
+    List<List<Integer>> permute2(int[] nums) // contain duplicate values
+    {
+    	Arrays.sort(nums);
+    	List<List<Integer>> ans=new ArrayList<>();
+    	perm(nums,0,new ArrayList<>(), 0, ans);
+    	return ans;
+    }
+
+	int count=0;
+	String ans;
 	void perm(String s, String target, int k) {
 		if (s.length()==1) {
 			//System.out.println(target+s);
@@ -43,6 +57,9 @@ public class Permutation {
         return ans;
     }
 
+
+	// The set [1,2,3,…,n] contains a total of n! unique permutations.
+	// Given n and k, return the kth permutation sequence, n is [1..9]
     int fact[];
     public String getPermutation(String src, String target, int k) {
     	int n=src.length();
@@ -64,7 +81,7 @@ public class Permutation {
     		sb.append(i);
     	return getPermutation(sb.toString(), "", k);
     }
-    public static void main(String[] args)
+    public static void testPermKth(String[] args)
     {
     	System.out.println(new Permutation().getPermutation(3,  1).equals("123"));
     	System.out.println(new Permutation().getPermutation(3,  2).equals("132"));
@@ -75,5 +92,11 @@ public class Permutation {
     	System.out.println(new Permutation().getPermutation(1,  1).equals("1"));
     	System.out.println(new Permutation().getPermutation(9,  199269).equals("594738216"));
     	System.out.println(new Permutation().getPermutation(9,  135401).equals("439157826"));
+    }
+    public static void main(String[] args)
+    {
+    	System.out.println(new Permutation().permute(new int[] {1,2,3}));
+
+    	System.out.println(new Permutation().permute2(new int[] {1,1,3}));
     }
 }
