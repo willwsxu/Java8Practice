@@ -136,8 +136,8 @@ public class Permutation {
     {
     	System.out.println(new Permutation().permute(new int[] {1,2,3}));
 
-    	System.out.println(new Permutation().permute2(new int[] {1,1,3}));
-    	System.out.println(new Permutation().permute2(new int[] {1,1,1,3,3,3,5}));
+    	System.out.println(new Permutation().permuteWithDup(new int[] {1,1,3}));
+    	System.out.println(new Permutation().permuteWithDup(new int[] {1,1,1,3,3,3,5}));
     	
     	int[] nums=new int[] {3,1,4,2};
     	new Permutation().nextPermutation(nums);
