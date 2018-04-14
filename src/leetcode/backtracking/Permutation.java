@@ -9,14 +9,18 @@ public class Permutation {
 	void perm(int[] nums, int pos, List<Integer> p, int mask, List<List<Integer>> ans) {
 		int n=nums.length;
 		if (pos==n) { // pos from 0 to n-1 are valid
-			//System.out.println(s);
 			ans.add(new ArrayList<>(p));
 			return;
 		}
+		int lastVal=Integer.MIN_VALUE;
 		for (int i=0; i<n; i++) {
 			int m=1<<i;
 			if ( (m&mask)>0 )  // digit used in previous position
 				continue;
+			if (nums[i]==lastVal)  // ignore duplicate
+				continue;
+			else
+				lastVal=nums[i];
 			p.add(nums[i]);
 			perm(nums, pos+1, p, mask|m, ans);
 			p.remove(p.size()-1);// remove last one
@@ -28,13 +32,14 @@ public class Permutation {
     	perm(nums,0,new ArrayList<>(), 0, ans);
     	return ans;
     }
-    List<List<Integer>> permute2(int[] nums) // contain duplicate values
+    List<List<Integer>> permute2(int[] nums) // contain duplicate values beat 98%
     {
     	Arrays.sort(nums);
     	List<List<Integer>> ans=new ArrayList<>();
     	perm(nums,0,new ArrayList<>(), 0, ans);
     	return ans;
     }
+    
     void arrayReverse(int[]arr, int s, int e) // beat 90% after switch from regular sort.
     {
     	e--;
@@ -68,7 +73,7 @@ public class Permutation {
         }
         arrayReverse(nums, 0,nums.length);
     }
-
+/*
 	int count=0;
 	String ans;
 	void perm(String s, String target, int k) {
@@ -90,7 +95,7 @@ public class Permutation {
     	//perm(n, 0,"", 0, k);
         return ans;
     }
-
+*/
 
 	// The set [1,2,3,…,n] contains a total of n! unique permutations.
 	// Given n and k, return the kth permutation sequence, n is [1..9]
@@ -132,6 +137,7 @@ public class Permutation {
     	System.out.println(new Permutation().permute(new int[] {1,2,3}));
 
     	System.out.println(new Permutation().permute2(new int[] {1,1,3}));
+    	System.out.println(new Permutation().permute2(new int[] {1,1,1,3,3,3,5}));
     	
     	int[] nums=new int[] {3,1,4,2};
     	new Permutation().nextPermutation(nums);
