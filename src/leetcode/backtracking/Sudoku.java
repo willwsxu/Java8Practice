@@ -16,7 +16,8 @@ public class Sudoku {
     int squareRow[]=new int[]{0, 0, 0, 3, 3, 3, 6, 6, 6};
     int squareCol[]=new int[]{0, 3, 6, 0, 3, 6, 0, 3, 6};
     Sudoku(String[] b)
-    { // a string for each row, use . for blank cell
+    { 
+        // a string for each row, use . for blank cell
         for (int i=0; i<b.length; i++) {
             for (int j=0; j<b[i].length(); j++) {
                 if (b[i].charAt(j)<='9' &&b[i].charAt(j)>='1')
@@ -27,6 +28,9 @@ public class Sudoku {
         computerRowColMasks(row_mask, col_mask);
         // initial mask of each square
         computerSquMasks(squ_mask);
+    }
+    Sudoku()
+    {        
     }
     boolean computerRowColMasks(int[] row_mask, int[] col_mask)
     {
@@ -103,62 +107,6 @@ public class Sudoku {
         }
         return -1;  // no more
     }
-    // from (r,c) of a cell, find the square index
-    int getSquare(int r, int c)
-    {
-        int s=r/3; // starting value of big row of squares
-        return s+c/3;
-    }
-    boolean isCellValid(int val, int r, int c)
-    {
-        int bitmask=1<<(val-1);
-        if ( (row_mask[r]&bitmask) > 0)
-            return false;
-        if ( (col_mask[c]&bitmask) > 0)
-            return false;
-        int s=getSquare(r,c);
-        if ( (squ_mask[s]&bitmask) > 0)
-            return false;
-        return true;
-    }
-        
-    void printMasks(int r, int c)
-    {
-        out.println("Row mask "+r+":"+Integer.toBinaryString(row_mask[r]));
-        out.println("Col mask "+c+":"+Integer.toBinaryString(col_mask[c]));
-        int s=getSquare(r,c);
-        out.println("Squ mask "+s+":"+Integer.toBinaryString(squ_mask[c]));
-    }
-    void setMasks(int val, int r, int c)
-    {
-        int bitmask=1<<(val-1);
-        row_mask[r] |= bitmask;
-        col_mask[c] |= bitmask;
-        int s=getSquare(r,c);
-        squ_mask[s] |= bitmask;
-    }
-    void resetMasks(int val, int r, int c)
-    {
-        int bitmask=1<<(val-1);
-        int fullMask=(1<<SUDOKU_SIZE)-1;  // all 1s, 111111111
-        bitmask ^= fullMask;            // flip bit for val;
-        //out.println("val "+val+" mask="+Integer.toBinaryString(bitmask)+" full="+Integer.toBinaryString(fullMask));
-        int s=getSquare(r,c);
-        //out.println("mask before: "+Integer.toBinaryString(row_mask[r])+", "+Integer.toBinaryString(col_mask[c])+", "+Integer.toBinaryString(squ_mask[s]));
-        row_mask[r] &= bitmask;         // reset bit for val
-        col_mask[c] &= bitmask;
-        squ_mask[s] &= bitmask;
-        //out.println("mask after : "+Integer.toBinaryString(row_mask[r])+", "+Integer.toBinaryString(col_mask[c])+", "+Integer.toBinaryString(squ_mask[s]));
-    }
-    boolean isBoardValid()
-    {
-        int []r_mask=new int[SUDOKU_SIZE];
-        int []c_mask=new int[SUDOKU_SIZE];
-        int []s_mask=new int[SUDOKU_SIZE];
-        if ( !computerSquMasks(s_mask))
-            return false;
-        return computerRowColMasks(r_mask, c_mask);
-    }
     
     public boolean isValidSudoku(char[][] board) {  //leetcode
         for (int i=0; i<SUDOKU_SIZE; i++) {
@@ -175,7 +123,6 @@ public class Sudoku {
         if ( !computerSquMasks(s_mask))
             return false;
         return computerRowColMasks(r_mask, c_mask);
-        
     }
     boolean updateBoardMasks()
     {
@@ -208,6 +155,27 @@ public class Sudoku {
         //out.println("r="+r+" c="+c+" fail");  can fail if previous choice is wrong
         return false;
     }
+    
+    public void solveSudoku(char[][] b) {        
+        for (int i=0; i<b.length; i++) {
+            for (int j=0; j<b[i].length; j++) {
+                if (b[i][j]<='9' && b[i][j]>='1')
+                    board[i][j]=b[i][j]-'0';
+            }
+        }
+        // calculate initial mask for each row and col
+        computerRowColMasks(row_mask, col_mask);
+        // initial mask of each square
+        computerSquMasks(squ_mask);
+        if (!backtracking(0))
+            System.out.println("no solution");       
+        for (int i=0; i<b.length; i++) {
+            for (int j=0; j<b[i].length; j++) {
+                    b[i][j]=(char)(board[i][j]+'0');
+            }
+        }
+    }
+
     void print()
     {
         for (int i=0; i<SUDOKU_SIZE; i++) {
@@ -220,6 +188,66 @@ public class Sudoku {
             }
             out.println();
         }
+    }
+    
+    // from (r,c) of a cell, find the square index
+    int getSquare(int r, int c)
+    {
+        int s=r/3; // starting value of big row of squares
+        return s+c/3;
+    }
+    // test code
+    boolean isCellValid(int val, int r, int c)
+    {
+        int bitmask=1<<(val-1);
+        if ( (row_mask[r]&bitmask) > 0)
+            return false;
+        if ( (col_mask[c]&bitmask) > 0)
+            return false;
+        int s=getSquare(r,c);
+        if ( (squ_mask[s]&bitmask) > 0)
+            return false;
+        return true;
+    }
+        
+    void printMasks(int r, int c)
+    {
+        out.println("Row mask "+r+":"+Integer.toBinaryString(row_mask[r]));
+        out.println("Col mask "+c+":"+Integer.toBinaryString(col_mask[c]));
+        int s=getSquare(r,c);
+        out.println("Squ mask "+s+":"+Integer.toBinaryString(squ_mask[c]));
+    }
+    
+    boolean isBoardValid()
+    {
+        int []r_mask=new int[SUDOKU_SIZE];
+        int []c_mask=new int[SUDOKU_SIZE];
+        int []s_mask=new int[SUDOKU_SIZE];
+        if ( !computerSquMasks(s_mask))
+            return false;
+        return computerRowColMasks(r_mask, c_mask);
+    }
+    
+    void setMasks(int val, int r, int c)
+    {
+        int bitmask=1<<(val-1);
+        row_mask[r] |= bitmask;
+        col_mask[c] |= bitmask;
+        int s=getSquare(r,c);
+        squ_mask[s] |= bitmask;
+    }
+    void resetMasks(int val, int r, int c)
+    {
+        int bitmask=1<<(val-1);
+        int fullMask=(1<<SUDOKU_SIZE)-1;  // all 1s, 111111111
+        bitmask ^= fullMask;            // flip bit for val;
+        //out.println("val "+val+" mask="+Integer.toBinaryString(bitmask)+" full="+Integer.toBinaryString(fullMask));
+        int s=getSquare(r,c);
+        //out.println("mask before: "+Integer.toBinaryString(row_mask[r])+", "+Integer.toBinaryString(col_mask[c])+", "+Integer.toBinaryString(squ_mask[s]));
+        row_mask[r] &= bitmask;         // reset bit for val
+        col_mask[c] &= bitmask;
+        squ_mask[s] &= bitmask;
+        //out.println("mask after : "+Integer.toBinaryString(row_mask[r])+", "+Integer.toBinaryString(col_mask[c])+", "+Integer.toBinaryString(squ_mask[s]));
     }
     static void unittest()
     {
@@ -276,6 +304,7 @@ public class Sudoku {
         sudo.print();
         
     }
+
     static void test()
     {        
         String[] puzzle=new String[]{
@@ -313,6 +342,19 @@ public class Sudoku {
     }
     public static void main(String[] args)
     {
-        test();
+        char[][] puzzle=new char[][]{
+            {'5','3','.','.','7','.','.','.','.'},
+            {'6','.','.','1','9','5','.','.','.'},
+            {'.','9','8','.','.','.','.','6','.'},
+            {'8','.','.','.','6','.','.','.','3'},
+            {'4','.','.','8','.','3','.','.','1'},
+            {'7','.','.','.','2','.','.','.','6'},
+            {'.','6','.','.','.','.','2','8','.'},
+            {'.','.','.','4','1','9','.','.','5'},
+            {'.','.','.','.','8','.','.','7','9'}
+        };
+        new Sudoku().solveSudoku(puzzle);
+        for (char r[]: puzzle)
+            System.out.println(Arrays.toString(r));
     }
 }
