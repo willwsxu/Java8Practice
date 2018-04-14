@@ -1,5 +1,5 @@
 
-package interviewbook;
+package leetcode.backtracking;
 
 import static java.lang.System.out;
 import java.util.Arrays;
