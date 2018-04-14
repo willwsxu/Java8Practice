@@ -6,37 +6,37 @@ import java.util.Collections;
 import java.util.List;
 
 public class Permutation {	
-	void perm(int[] nums, int pos, List<Integer> p, int mask, List<List<Integer>> ans) {
+	void perm(int[] nums, List<Integer> p, int mask, List<List<Integer>> ans) {
 		int n=nums.length;
-		if (pos==n) { // pos from 0 to n-1 are valid
+		if (p.size()==n) {  // got all numbers, copy to answer
 			ans.add(new ArrayList<>(p));
 			return;
 		}
 		int lastVal=Integer.MIN_VALUE;
 		for (int i=0; i<n; i++) {
-			int m=1<<i;
-			if ( (m&mask)>0 )  // digit used in previous position
+			int m=1<<i;        // bit mask of each position
+			if ( (m&mask)>0 )  // element chosen previously
 				continue;
-			if (nums[i]==lastVal)  // ignore duplicate
+			if (nums[i]==lastVal)  // ignore duplicate value
 				continue;
 			else
 				lastVal=nums[i];
 			p.add(nums[i]);
-			perm(nums, pos+1, p, mask|m, ans);
+			perm(nums, p, mask|m, ans);
 			p.remove(p.size()-1);// remove last one
 		}
 	}
     List<List<Integer>> permute(int[] nums) // beat 64%
     {
     	List<List<Integer>> ans=new ArrayList<>();
-    	perm(nums,0,new ArrayList<>(), 0, ans);
+    	perm(nums,new ArrayList<>(), 0, ans);
     	return ans;
     }
-    List<List<Integer>> permute2(int[] nums) // contain duplicate values beat 98%
+    List<List<Integer>> permuteWithDup(int[] nums) // contain duplicate values beat 98%
     {
     	Arrays.sort(nums);
     	List<List<Integer>> ans=new ArrayList<>();
-    	perm(nums,0,new ArrayList<>(), 0, ans);
+    	perm(nums,new ArrayList<>(), 0, ans);
     	return ans;
     }
     
