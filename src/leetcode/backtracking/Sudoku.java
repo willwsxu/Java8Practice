@@ -4,6 +4,7 @@ package leetcode.backtracking;
 import static java.lang.System.out;
 import java.util.Arrays;
 
+// beat 2%, slow, need improvement
 public class Sudoku {
     // mask for each row, col and square
     // each bit represent if a number exsit
@@ -107,7 +108,6 @@ public class Sudoku {
         }
         return -1;  // no more
     }
-    
     public boolean isValidSudoku(char[][] board) {  //leetcode
         for (int i=0; i<SUDOKU_SIZE; i++) {
             for (int j=0; j<SUDOKU_SIZE; j++) {
@@ -117,13 +117,18 @@ public class Sudoku {
                     this.board[i][j]=board[i][j]-'0';
             }
         }
+        return isValid();
+    }
+    boolean isValid()
+    {
         int []r_mask=new int[SUDOKU_SIZE];
         int []c_mask=new int[SUDOKU_SIZE];
         int []s_mask=new int[SUDOKU_SIZE];
         if ( !computerSquMasks(s_mask))
             return false;
-        return computerRowColMasks(r_mask, c_mask);
+        return computerRowColMasks(r_mask, c_mask);        
     }
+    /*
     boolean updateBoardMasks()
     {
         Arrays.fill(row_mask, 0);
@@ -133,6 +138,24 @@ public class Sudoku {
             return false;
         return computerRowColMasks(row_mask, col_mask);
     }
+
+    boolean isValid(int val, int r, int c)
+    {
+        for (int i=0; i<SUDOKU_SIZE; i++) {
+            if (board[r][i]==val)
+                return false;
+            if (board[i][c]==val)
+                return false;
+        }
+        int s=getSquare(r,c);
+        for (int i=squareRow[s]; i<squareRow[s]+3; i++) {
+            for (int j=squareCol[s]; j<squareCol[s]+3; j++) {
+                if (board[i][j]==val)
+                    return false;
+            }
+        }
+        return true;
+    }*/
     boolean backtracking(int pos)
     {
         int blank=findNextOpenCell(pos);
@@ -142,10 +165,10 @@ public class Sudoku {
         int c=blank%SUDOKU_SIZE;
         for (int i=1; i<=9; i++) {
             board[r][c]=i;
-            if ( !updateBoardMasks() ) {  // invalid choice
-                //out.println("Invalid backtracking: r="+r+" c="+c);
-                //print();
-                board[r][c]=0; // still want to know why this line is needed
+            if ( !isValid() ) {  // invalid choice
+                //out.println("Invalid backtracking: r="+r+" c="+c+" add "+i);
+                //print();                
+                board[r][c]=0;  
                 continue;
             }
             if ( backtracking(blank+1))
