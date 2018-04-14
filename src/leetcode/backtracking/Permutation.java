@@ -2,6 +2,7 @@ package leetcode.backtracking;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Permutation {	
@@ -34,11 +35,21 @@ public class Permutation {
     	perm(nums,0,new ArrayList<>(), 0, ans);
     	return ans;
     }
-    
+    void arrayReverse(int[]arr, int s, int e) // beat 90% after switch from regular sort.
+    {
+    	e--;
+    	while (s<e) {
+    		arr[s]=arr[s]^arr[e];
+    		arr[e]=arr[s]^arr[e];
+    		arr[s]=arr[s]^arr[e];
+    		s++;
+    		e--;
+    	}
+    }
     public void nextPermutation(int[] nums) {
         for (int i=nums.length-2; i>=0; i--) {
         	if (nums[i]<nums[i+1]) { // e.g. 3,1,4,2, i=1 find first position whose value is smaller than next one
-        		Arrays.sort(nums, i+1, nums.length);  // sort from i=2: 3,1,2,4
+        		arrayReverse(nums, i+1, nums.length);  // reverse sort from i=2: 3,1,2,4
         		int next=Arrays.binarySearch(nums, i+1, nums.length, nums[i]+1); //find next where nums[next]>= nums[i]+1, next=-3
         		//System.out.println(i);
         		//System.out.println(next);
@@ -55,7 +66,7 @@ public class Permutation {
         		return;
         	}
         }
-        Arrays.sort(nums);
+        arrayReverse(nums, 0,nums.length);
     }
 
 	int count=0;
