@@ -40,6 +40,29 @@ public class Permutation {
     	return ans;
     }
     
+    // choose k numbers from 1 to n
+	void combine(int n, int k, List<Integer> p, List<List<Integer>> ans) {
+		if (p.size()==k) {  // got all numbers, copy to answer
+			ans.add(new ArrayList<>(p));
+			return;
+		}
+		int s=p.size();
+		int next=s==0?1:p.get(s-1)+1;  // start from 1, or next number in the list of chosen
+		for (; next<=n-k+s+1; next++) {// carefully calculate the last number to choose to ensure K numbers
+			p.add(next);
+			combine(n, k, p, ans);
+			p.remove(s);// remove last one
+		}
+	}
+	List<List<Integer>> combine(int n, int k)  // beat 99.5%
+	{
+		List<List<Integer>> ans = new ArrayList<>();
+		if (k>n)
+			return ans;
+		combine(n, k, new ArrayList<Integer>(), ans);
+		return ans;
+	}
+    
     void arrayReverse(int[]arr, int s, int e) // beat 90% after switch from regular sort.
     {
     	e--;
@@ -157,5 +180,8 @@ public class Permutation {
     	nums=new int[] {2,1,2,2,2,2,2,1};
     	new Permutation().nextPermutation(nums);
     	System.out.println(Arrays.toString(nums));
+    	
+    	List<List<Integer>> ans=new Permutation().combine(3, 2);
+    	System.out.println(ans);
     }
 }
