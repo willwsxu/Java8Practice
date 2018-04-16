@@ -1,7 +1,9 @@
 package leetcode.backtracking;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Parentheses {
 	
@@ -25,13 +27,18 @@ public class Parentheses {
     
 	// Given a string of numbers and operators, return all possible results from computing all the different 
 	// possible ways to group numbers and operators. The valid operators are +, - and *.
-    public List<Integer> diffWaysToCompute(String input) {
-    	int operators=0;
-        List<Integer> ans=new ArrayList<>();        
+    public List<Integer> diffWaysToCompute(String input) { // beat 68% before adding memo
+    	Map<String, List<Integer>> memo= new HashMap<>(); // hashmap storage overhead can negate performance savings if not enough overlapping substring
+    	return diffWaysToCompute(input, memo);
+    }
+    private List<Integer> diffWaysToCompute(String input, Map<String, List<Integer>> memo) {// didn't see speed up after adding memo
+    	List<Integer> ans=memo.get(input);
+        if (ans!=null)
+        	return ans;  // computed before
+    	ans = new ArrayList<>();
         for (int i=0; i<input.length(); i++) {
         	if (!Character.isDigit(input.charAt(i))) {  // find an operator
-        		operators++;
-            	String left=input.substring(0, i);
+            	String left=input.substring(0, i);  // divide into two parts
             	String right=input.substring(i+1, input.length());
         		List<Integer> ansL=diffWaysToCompute(left); // find answer left side
         		List<Integer> ansR=diffWaysToCompute(right);// find answer right side
@@ -46,9 +53,9 @@ public class Parentheses {
         		}
         	}
         }
-        if (operators==0) {  // terminate case, operand only
+        if (ans.isEmpty())  // terminate/base case, operand only
         	ans.add(Integer.parseInt(input));
-        }
+        memo.put(input,  ans);  // save computed answer for a particular substring
         return ans;
     }
     public static void main(String[] args)
