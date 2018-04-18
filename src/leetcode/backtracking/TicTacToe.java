@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class TicTacToe {
 	
-	boolean win(String[] board, int r, int c, int dR, int dC)
+	boolean win(String[] board, int r, int c, int dR, int dC) // check 3 in a direction
 	{
 		char side=board[r].charAt(c);
 		if (side==' ')
@@ -17,7 +17,7 @@ public class TicTacToe {
 	}
 
     public boolean validTicTacToe(String[] board) {
-    	int x=0;
+    	int x=0;  // count X and O
     	int o=0;
         for (int i=0; i<board.length; i++) {
         	for (int j=0; j<board[0].length(); j++) {
@@ -27,9 +27,9 @@ public class TicTacToe {
         		}
         	}
         }
-        //System.out.println(x+" "+o);
     	if (o>x || o<x-1)
     		return false;
+    	// 8 winning starting position and direction
         int[][] winPositions=new int[][] {{0,0,1,0},{0,0,1,1},{0,0,0,1},{0,1,1,0},{0,2,1,0},{0,2,1,-1},{1,0,0,1},{2,0,0,1}};
         boolean xwin=false, owin=false;
         for (int[] pos: winPositions) { 
