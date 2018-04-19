@@ -17,14 +17,14 @@ public class WordSearch {
 			return false;
 		visiting[r][c]=true; // mark true so it is not used again in the same search
 		for (int[]d: dir) {
-			if (dfs(board, r+d[0], c+d[1], word, idx+1)) // next move in 4 dirations
+			if (dfs(board, r+d[0], c+d[1], word, idx+1)) // next move in 4 directions
 				return true;
 		}
 		visiting[r][c]=false;
 		return false;
 	}
     public boolean exist(char[][] board, String word) {
-    	if (board.length==0)
+    	if (board.length==0) // word.toCharArray is bad for performance
     		return false;
     	visiting=new boolean[board.length][board[0].length];
     	for (int i=0; i<board.length; i++) {
