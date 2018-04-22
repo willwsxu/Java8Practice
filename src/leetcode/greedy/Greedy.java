@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 class Interval {
     int start;
@@ -69,10 +71,46 @@ public class Greedy {
         }
         return deleted;
     }
+    
+    // Given a list of tasks, from A to Z, each can be complete in one interval
+    // there is a non-negative cooling interval n that means between two same tasks, 
+    // there must be at least n intervals, some other task or idle
+    // return the least number of intervals the CPU will take to finish all the given tasks.
+    // idea: find max repeating task, calculate idles required to satisfy n
+    static public int leastInterval(char[] tasks, int n) {
+        int[]count=new int[26]; // count of each task
+        int maxCount=0;			// max repeating task
+        //Set<Character> kind=new HashSet<>();
+        for (char t: tasks) {
+        	count[t-'A']++;
+        	//kind.add(t);
+        	maxCount=Integer.max(maxCount, count[t-'A']);
+        }
+        int filling=0; // tasks filling in between to satisfy n
+        boolean seenMax=false;
+        for (int c: count) {
+        	if (c==maxCount) {
+        		if (!seenMax) {  // skip this as it is the first MAX
+        			seenMax=true;
+        			continue;
+        		}
+        		else  // only need to fill c-1 in between
+        			filling += (c-1);
+        	}
+        	else
+        		filling+=c;
+        }
+        int idles=n*(maxCount-1)-filling;
+        if (idles<=0)
+        	return tasks.length;
+
+        return idles+tasks.length;
+    }
     public static void main(String[] args)
     {
     	List<Integer> ans=partitionLabels("ababcbacadefegdehijhklij");
     	System.out.println(ans);
     	
+    	System.out.println(leastInterval(new char[] {'A','A','A','B','B','B'}, 2)==8);
     }
 }
