@@ -80,10 +80,8 @@ public class Greedy {
     static public int leastInterval(char[] tasks, int n) {
         int[]count=new int[26]; // count of each task
         int maxCount=0;			// max repeating task
-        //Set<Character> kind=new HashSet<>();
         for (char t: tasks) {
         	count[t-'A']++;
-        	//kind.add(t);
         	maxCount=Integer.max(maxCount, count[t-'A']);
         }
         int filling=0; // tasks filling in between to satisfy n
@@ -106,11 +104,56 @@ public class Greedy {
 
         return idles+tasks.length;
     }
+    
+    //Each person is described by a pair of integers (h, k), where h is the height and k is number of people 
+    // in front of this person who have a height greater than or equal to h
+    // The number of people is less than 1,100
+    static void print(int[][] people)
+    {
+    	for (int[] r:people)
+    		System.out.print(Arrays.toString(r)+" ");
+    	System.out.println();
+    }
+    static public int[][] reconstructQueue(int[][] people) {
+    	Comparator<int[]> cmp1=(c1,c2)->c1[1]-c2[1]; // sort by k
+    	Comparator<int[]> cmp2=(c1,c2)->c1[0]-c2[0]; // sort by h
+        Arrays.sort(people, cmp1.thenComparing(cmp2));
+        List<int[]> temp=new ArrayList<>();
+        for (int i=0; i<people.length; i++) {
+        	if (people[i][1]==0) {  // same k, just append
+        		temp.add(people[i]);
+        		continue;
+        	}
+        	int taller=0;
+        	for (int j=0; j<temp.size();j++) {
+        		if (temp.get(j)[0]>=people[i][0])
+        			taller++;
+        		if (taller==people[i][1]) {  // find position to satisfy k
+        			for (j=j+1; j<temp.size();j++)
+        				if (temp.get(j)[0]>=people[i][0])
+        					break;
+        			temp.add(j, people[i]);
+        			//System.out.println("insert at "+(j+1)+" "+Arrays.toString(people[i]));
+        			break;
+        		}
+        	}
+        }
+        for (int i=0; i<people.length; i++)
+        	people[i]=temp.get(i);
+        return people;
+    }
     public static void main(String[] args)
     {
     	List<Integer> ans=partitionLabels("ababcbacadefegdehijhklij");
     	System.out.println(ans);
     	
     	System.out.println(leastInterval(new char[] {'A','A','A','B','B','B'}, 2)==8);
+    	
+    	int[][] p=new int[][]{{7,0}, {4,4}, {7,1}, {5,0}, {6,1}, {5,2}};
+    	p = reconstructQueue(p);
+        print(p); // [5, 0] [7, 0] [5, 2] [6, 1] [4, 4] [7, 1] 
+        p=new int[][]{{6,0},{5,0},{4,0},{3,2},{2,2},{1,4}};
+    	p = reconstructQueue(p);
+        print(p);
     }
 }
