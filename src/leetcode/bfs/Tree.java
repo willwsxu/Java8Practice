@@ -122,7 +122,41 @@ public class Tree {
         }
         return ans;
     }
-    public static void main(String[] args)
+
+    //Given an integer n, generate all structurally unique BST's that store values 1 ... n
+    List<TreeNode> generate(int L, int R) // top down recursion, beat 97%
+    {
+    	List<TreeNode> root=new ArrayList<>();
+    	if (L>R) {
+    		root.add(null);
+    		return root;
+    	} else if (L==R) {
+    		root.add(new TreeNode(L));
+    		return root;
+    	}
+    	List<TreeNode> left, right;
+    	for (int i=L; i<=R; i++) {
+    		left=generate(L, i-1);
+    		right=generate(i+1, R);
+    		for (int j=0; j<left.size(); j++) { // combine left tree with right, create a root for each combo, store in list
+    			for (int k=0; k<right.size(); k++) {
+    				TreeNode r=new TreeNode(i);
+    				r.left=left.get(j);  // dp, share nodes from leaf up to current root
+    				r.right=right.get(k);
+    				root.add(r);
+    			}
+    		}
+    	}
+    	return root;
+    }
+    
+    public List<TreeNode> generateTrees(int n) {
+    	if (n==0)
+    		return new ArrayList<>();
+    	return generate(1, n);
+    }
+
+    static void testTreeBfs()
     {
     	TreeNode r=new TreeNode(1);
     	r.left=new TreeNode(2);
@@ -146,6 +180,50 @@ public class Tree {
         ans=zigzagLevelOrder(r);
     	for (List<Integer> li: ans) {
             System.out.println(li);
+    	}    	
+    }
+    static void print(TreeNode root) {
+        Queue<TreeNode> q=new ArrayDeque<>();
+        q.add(root);
+        TreeNode nil=new TreeNode(0);
+        while (!q.isEmpty()) {
+        	int oldSize=q.size();
+        	for (int i=0; i<oldSize; i++) {
+        		TreeNode tn=q.poll();
+            	if (tn.val==0) {
+            		System.out.print("null, ");
+            		continue;
+            	}
+            	else
+            		System.out.print(tn.val+", ");
+            	if (tn.left!=null)
+            		q.add(tn.left);
+            	else if ( tn.right !=null ) {
+            		q.add(nil);
+            	}
+            	if ( tn.right !=null)
+            		q.add(tn.right);
+            	else if (tn.left!=null)
+            		q.add(nil);
+        	}
+        }
+    }
+    public static void main(String[] args)
+    {
+    	List<TreeNode> trees=new Tree().generateTrees(3);
+    	for (TreeNode t: trees) {
+    		print(t);
+    		System.out.println();
+    	}
+    	trees=new Tree().generateTrees(0);
+    	for (TreeNode t: trees) {
+    		print(t);
+    		System.out.println();
+    	}
+    	trees=new Tree().generateTrees(1);
+    	for (TreeNode t: trees) {
+    		print(t);
+    		System.out.println();
     	}
     }
 }
