@@ -12,7 +12,7 @@ public class JumpGame implements Runnable {
             return true;
         if (pos>=nums.length)
             return false;
-        if ( dp[pos]!=0 )    // check if this position is aready computed
+        if ( dp[pos]!=0 )    // check if this position is already computed
             return dp[pos]==1;
         if ( nums[pos]==0 ) {
             dp[pos]=-1;
@@ -24,7 +24,7 @@ public class JumpGame implements Runnable {
             return true;            
         }
         int end=1;
-        if (pos<nums.length-1 )  //prune postion that pos+1 can reach
+        if (pos<nums.length-1 )  //prune position that pos+1 can reach
             end = nums[pos+1]+1;
         for (int i=nums[pos]; i>=end; i--) {
             if (jump(nums, i+pos)) {

@@ -117,19 +117,19 @@ public class Greedy {
     static public int[][] reconstructQueue(int[][] people) {
     	Comparator<int[]> cmp1=(c1,c2)->c1[1]-c2[1]; // sort by k
     	Comparator<int[]> cmp2=(c1,c2)->c1[0]-c2[0]; // sort by h
-        Arrays.sort(people, cmp1.thenComparing(cmp2));
+        Arrays.sort(people, cmp1.thenComparing(cmp2)); // sorted primarily by k, if ksame, sort by h
         List<int[]> temp=new ArrayList<>();
         for (int i=0; i<people.length; i++) {
-        	if (people[i][1]==0) {  // same k, just append
+        	if (people[i][1]==0) {  // k==0, just append
         		temp.add(people[i]);
         		continue;
         	}
         	int taller=0;
         	for (int j=0; j<temp.size();j++) {
-        		if (temp.get(j)[0]>=people[i][0])
+        		if (temp.get(j)[0]>=people[i][0])  // count people in the temp list no sorter than the one next to add
         			taller++;
         		if (taller==people[i][1]) {  // find position to satisfy k
-        			for (j=j+1; j<temp.size();j++)
+        			for (j=j+1; j<temp.size();j++)  // keep look ahead to pass all shorter people
         				if (temp.get(j)[0]>=people[i][0])
         					break;
         			temp.add(j, people[i]);
@@ -141,6 +141,53 @@ public class Greedy {
         for (int i=0; i<people.length; i++)
         	people[i]=temp.get(i);
         return people;
+    }
+    
+    // process senator from left to right, each senator can ban other party to vote. 
+    // when one round is done, repeat, until all senators belong to one party
+    // e.g. DDRRR, first round, 2D ban 2R, R ban D, result DR. 2nd round D ban R, D win
+    void vote(int count[], int[] ban, List<Integer> alive, int side)
+    {
+		if (ban[side]>0) { // previous opponents have outstanding bans
+			ban[side]--;  // simply reduce the count
+		} else {
+			count[side]++;
+			if (count[1-side]>0) {  // if there are opponents before this guy, it is preferred to ban 
+				alive.remove(new Integer(1-side)); // ban previous opponent
+				count[1-side]--;
+				System.out.println("remove "+(1-side));
+			}
+			else 
+				ban[1-side]++;  // issue outstanding ban for next
+			alive.add(side);
+		}    	
+    }
+    public String predictPartyVictory(String senate) {
+    	int[] count=new int[2]; // 0-R, 1-D
+    	int[] ban=new int[2];
+    	List<Integer> alive=new ArrayList<>();  // senators not banned
+    	for (int i=0; i<senate.length(); i++) { // first round
+    		int side=senate.charAt(i)=='R'?0:1;
+    		vote(count, ban, alive, side);
+    		System.out.println(alive);
+    	}
+    	System.out.println(Arrays.toString(count));
+    	System.out.println(Arrays.toString(ban));
+        while (count[0]>0 && count[1]>0) {  // rounds
+        	count[0]=count[1]=0;//  reset
+        	List<Integer> next=new ArrayList<>(); 
+        	for (Integer side: alive ) {
+        		vote(count, ban, next, side);       
+        		System.out.println(next); 		
+        	}
+        	alive=next;
+        	System.out.println(Arrays.toString(count));
+        	System.out.println(Arrays.toString(ban));
+        }
+        if (count[0]>0)
+        	return "Radiant";
+        else
+        	return "Dire";
     }
     public static void main(String[] args)
     {
@@ -155,5 +202,11 @@ public class Greedy {
         p=new int[][]{{6,0},{5,0},{4,0},{3,2},{2,2},{1,4}};
     	p = reconstructQueue(p);
         print(p);  // [4, 0] [5, 0] [2, 2] [3, 2] [1, 4] [6, 0]
+
+        System.out.println(new Greedy().predictPartyVictory("DRRDRDRDRDDRDRDR")); // R
+        /*System.out.println(new Greedy().predictPartyVictory("RD"));
+        System.out.println(new Greedy().predictPartyVictory("DR"));
+        System.out.println(new Greedy().predictPartyVictory("R"));
+        System.out.println(new Greedy().predictPartyVictory("RDD"));*/
     }
 }
