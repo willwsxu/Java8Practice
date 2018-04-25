@@ -173,19 +173,13 @@ public class Greedy {
     // e.g. DDRRR, first round, 2D ban 2R, R ban D, result DR. 2nd round D ban R, D win
     void vote(int count[], int[] ban, List<Integer> alive, int side)
     {
-		if (ban[side]>0) { // previous opponents have outstanding bans
-			ban[side]--;  // simply reduce the count
-		} else {
-			count[side]++;
-			if (count[1-side]>0) {  // if there are opponents before this guy, it is preferred to ban 
-				alive.remove(new Integer(1-side)); // ban previous opponent
-				count[1-side]--;
-				System.out.println("remove "+(1-side));
-			}
-			else 
-				ban[1-side]++;  // issue outstanding ban for next
-			alive.add(side);
-		}    	
+        if (ban[side]>0) { // previous opponents have outstanding bans
+                ban[side]--;  // simply reduce the count
+        } else {
+                count[side]++;
+                ban[1-side]++;  // issue outstanding ban for next is more optimal than ban previous ones
+                alive.add(side);
+        }    	
     }
     public String predictPartyVictory(String senate) {
     	int[] count=new int[2]; // 0-R, 1-D
@@ -194,20 +188,15 @@ public class Greedy {
     	for (int i=0; i<senate.length(); i++) { // first round
     		int side=senate.charAt(i)=='R'?0:1;
     		vote(count, ban, alive, side);
-    		System.out.println(alive);
+    		//System.out.println(alive);
     	}
-    	System.out.println(Arrays.toString(count));
-    	System.out.println(Arrays.toString(ban));
         while (count[0]>0 && count[1]>0) {  // rounds
-        	count[0]=count[1]=0;//  reset
+        	count[0]=count[1]=0;//  reset cpunt, but bans from previous round will be processed next round for efficiency
         	List<Integer> next=new ArrayList<>(); 
         	for (Integer side: alive ) {
-        		vote(count, ban, next, side);       
-        		System.out.println(next); 		
+        		vote(count, ban, next, side);    	
         	}
         	alive=next;
-        	System.out.println(Arrays.toString(count));
-        	System.out.println(Arrays.toString(ban));
         }
         if (count[0]>0)
         	return "Radiant";
@@ -229,9 +218,9 @@ public class Greedy {
         print(p);  // [4, 0] [5, 0] [2, 2] [3, 2] [1, 4] [6, 0]
 
         System.out.println(new Greedy().predictPartyVictory("DRRDRDRDRDDRDRDR")); // R
-        /*System.out.println(new Greedy().predictPartyVictory("RD"));
-        System.out.println(new Greedy().predictPartyVictory("DR"));
-        System.out.println(new Greedy().predictPartyVictory("R"));
-        System.out.println(new Greedy().predictPartyVictory("RDD"));*/
+        System.out.println(new Greedy().predictPartyVictory("RD"));  // R
+        System.out.println(new Greedy().predictPartyVictory("DR"));  // D
+        System.out.println(new Greedy().predictPartyVictory("R"));   // R
+        System.out.println(new Greedy().predictPartyVictory("RDD")); // D
     }
 }
