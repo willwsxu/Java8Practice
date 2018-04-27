@@ -71,6 +71,31 @@ public class Greedy {
         }
         return deleted;
     }
+    public List<Interval> merge(List<Interval> intervals) {
+    	if (intervals.size()<2)
+    		return intervals;
+    	Comparator<Interval> cmp1=(c1,c2)->c2.end-c1.end; // reverse sort by end point
+    	Comparator<Interval> cmp2=(c1,c2)->c1.start-c2.start; // sort by start point
+    	Collections.sort(intervals, cmp2.thenComparing(cmp1));
+    	List<Interval> ans = new ArrayList<>();
+    	Interval last=null;
+    	for (Interval it: intervals) {
+    		if (last==null)
+    			last=it;
+    		else {
+    			if (last.end<it.start) {
+    				ans.add(last);
+    				last=it;
+    			} else {
+    				if (last.end<it.end)
+    					last.end=it.end;
+    			}
+    		}
+    	}
+    	if (last !=null)
+    		ans.add(last);
+    	return ans;
+    }
     
     // Given a list of tasks, from A to Z, each can be complete in one interval
     // there is a non-negative cooling interval n that means between two same tasks, 
