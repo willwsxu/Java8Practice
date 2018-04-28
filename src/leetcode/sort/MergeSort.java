@@ -7,7 +7,7 @@ public class MergeSort {
 		ListNode cur=head;
 		while (sz1>0 &&sz2>0) {
 			ListNode next=null;
-			if (l1.val<l2.val) {
+			if (l1.val<l2.val) { // stitch list from 2 sorted lists
 				next=l1;
 				l1=l1.next;
 				sz1--;
@@ -29,7 +29,7 @@ public class MergeSort {
 			sz1=sz2;
 			l1=l2;
 		}
-		while (sz1-->0) {
+		while (sz1-->0) {  // just append leftover nodes from longer list
 			cur.next=l1;
 			cur=l1;
 			l1=l1.next;
@@ -39,15 +39,15 @@ public class MergeSort {
 	}
 	ListNode mergeSort(ListNode head, int size)
 	{
-		if (size==1)
+		if (size==1)  // terminal condition, one element is sorted
 			return head;
 		ListNode second=head;
 		int n=size/2;
 		for (int i=0; i<n; i++)
 			second=second.next;
-		head=mergeSort(head, n);
-		second = mergeSort(second, size-n);
-		return merge(head, n, second, size-n);
+		head=mergeSort(head, n);  // sort first half
+		second = mergeSort(second, size-n);// sort second half
+		return merge(head, n, second, size-n);  // merge 2 sorted halves
 	}
     public ListNode sortList(ListNode head) {
         int count=0;
