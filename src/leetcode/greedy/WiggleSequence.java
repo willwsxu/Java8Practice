@@ -6,6 +6,10 @@ package leetcode.greedy;
 import java.util.Arrays;
 class Partition
 {
+	void shuffle(int[] nums)
+	{
+		
+	}
 	int partition(int[] nums, int start, int end) // partition values <nums[start] to left, [start, end)
 	{
 		int oriEnd=end;
@@ -34,10 +38,6 @@ class Partition
 			}
 		}
 		return pivot;
-	}
-	void shuffle(int[] nums)
-	{
-		
 	}
 	void nthElement(int[]nums, int n)  // from low to high, for now. pivot on index n (0 based)
 	{
@@ -74,6 +74,31 @@ class Partition
 		new Partition().nthElement(nums, 2);
 		System.out.println(nums[2]);
 	}
+	
+    public void wiggleSort(int[] nums) {
+    	int pivot=(nums.length+1)/2;
+        nthElement(nums, pivot);
+        int ans[]=new int[nums.length];
+        for (int i=0; i<pivot; i++)  // first half to even slots
+        	ans[2*i]=nums[pivot-1-i];         // reverse order
+        for (int i=0; i<nums.length/2; i++)  // first half to even slots
+        	ans[2*i+1]=nums[nums.length-i-1]; // reverse order
+        	//ans[2*i+1]=nums[pivot+i];
+        for (int i=0; i<nums.length; i++)
+        	nums[i]=ans[i];
+    }
+    static void testWiggle()
+    {
+    	int [] nums=new int[] {1,5,1,1,6,4};
+    	new Partition().wiggleSort(nums);
+    	System.out.println(Arrays.toString(nums));
+    	nums=new int[] {1,3,2,2,3,1};
+    	new Partition().wiggleSort(nums);
+    	System.out.println(Arrays.toString(nums));
+    	nums=new int[] {4,5,5,6};
+    	new Partition().wiggleSort(nums);
+    	System.out.println(Arrays.toString(nums));
+    }
 }
 public class WiggleSequence {
     static public int wiggleMaxLength(int[] nums) {  // beat 100%
@@ -104,18 +129,6 @@ public class WiggleSequence {
         return count1;
     }
 
-    static public void wiggleSort(int[] nums) {
-    	int pivot=(nums.length+1)/2;
-        new Partition().nthElement(nums, pivot);
-        int ans[]=new int[nums.length];
-        for (int i=0; i<pivot; i++)  // first half to even slots
-        	ans[2*i]=nums[i];
-        for (int i=0; i<nums.length/2; i++)  // first half to even slots
-        	//ans[2*i+1]=nums[nums.length-i-1];
-        	ans[2*i+1]=nums[pivot+i];
-        for (int i=0; i<nums.length; i++)
-        	nums[i]=ans[i];
-    }
     static void test()
     {
         System.out.println(wiggleMaxLength(new int[]{1,7,4,9,2,5})==6);
@@ -125,11 +138,6 @@ public class WiggleSequence {
     }
     public static void main(String[] args)
     {
-    	int [] nums=new int[] {1,5,1,1,6,4};
-    	wiggleSort(nums);
-    	System.out.println(Arrays.toString(nums));
-    	nums=new int[] {1,3,2,2,3,1};
-    	wiggleSort(nums);
-    	System.out.println(Arrays.toString(nums));
+    	Partition.testWiggle();
     }
 }
