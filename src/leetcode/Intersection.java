@@ -21,7 +21,7 @@ public class Intersection {
 			ans[i]=nums[i];
 		return ans;
 	}
-	
+
 	static Set<Integer> convert(int[] nums)
 	{
 		Set<Integer> s=new HashSet<>();
