@@ -3,7 +3,6 @@ package leetcode.binarySearch;
 import java.util.Arrays;
 
 public class FourSum {
-
 	// compute how many tuples A[i]+B[j]+C[k]+D[l]=0
 	int[] combineSum(int[]A, int[]B)
 	{
@@ -21,21 +20,8 @@ public class FourSum {
         int sumCD[]=combineSum(C, D);
         int ans=0;
         for (int i=0; i<sumAB.length; i++) {
-        	int pos=Arrays.binarySearch(sumCD, -sumAB[i]);
-        	if (pos<0)
-        		continue;
-        	for (int j=pos; j<sumCD.length; j++) {
-        		if (sumCD[j]==-sumAB[i])
-        			ans++;
-        		else
-        			break;        		
-        	}
-        	for (int j=pos-1; j>=0; j--) {
-        		if (sumCD[j]==-sumAB[i])
-        			ans++;
-        		else
-        			break;        		
-        	}
+        	int pos[]=BinarySearch.equal_range(sumCD, -sumAB[i]);
+        	ans+=pos[1]-pos[0];
         }
         return ans;
     }
